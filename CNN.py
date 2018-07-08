@@ -4,19 +4,44 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Conv1D, GlobalAveragePooling1D, MaxPooling1D, Flatten
+from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
+                          MaxPooling1D, Flatten)
 from keras import callbacks
-import datetime
+import datetime.datetime
+import os
 
 
-def model(X, y, epochs, test_split_size=0.1, TensorBoard_dir='./logs/1', verbose=1, no_GPU=0, batch_size = 32 ):
+def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
+          no_GPU=0, batch_size=32, optimizer='adam',
+          loss='binary_crossentropy', metrics=['accuracy']):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.1)
-    tensorboard = callbacks.TensorBoard(log_dir=TensorBoard_dir+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')) 
+    X_train, _, y_train, _ = train_test_split(X, y, test_size=.1)
+
+    TBlog_path = './TrainedModels/logs/'+name+'-'+datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    Model_save_path = './TrainedModels/model/'+name+'/'+'/'+datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'/'
+    os.makedirs(Model_save_path)
+
+    # Call backs
+    checkpoint = callbacks.ModelCheckpoint(
+        filepath=Model_save_path+name+'.{epoch}-{val_loss:.3f}.hdf5',
+        monitor='val_loss', verbose=0, save_best_only=True,
+        save_weights_only=False, mode='min', period=1)
+
+    reduceLR = keras.callbacks.ReduceLROnPlateau(
+        monitor='val_loss', factor=0.1, patience=10, verbose=0,
+        mode='auto', min_delta=0.0001, cooldown=0, min_lr=0)
+
+    keras.callbacks.EarlyStopping(
+        monitor='loss', min_delta=0, patience=20, verbose=0,
+        mode='auto', baseline=None)
+
+    tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
+    callbacks = [tensorboard, checkpoint, reduceLR, EarlyStopping]
+
     model = Sequential()
-    model.add(Conv1D(filters=1, kernel_size=5 ,strides=10,     
-                     input_shape=(X.shape[1],1),kernel_initializer= 'uniform',      
-                     activation= 'relu'))
+    model.add(Conv1D(filters=1, kernel_size=5, strides=10,
+                     input_shape=(X.shape[1], 1), kernel_initializer='uniform',
+                     activation='relu'))
     model.add(Dropout(0.5))
     model.add(MaxPooling1D(2))
     model.add(Flatten())
@@ -27,10 +52,16 @@ def model(X, y, epochs, test_split_size=0.1, TensorBoard_dir='./logs/1', verbose
     model.add(Dense(3, activation='softmax'))
     model.summary()
     if no_GPU < 2:
-        model.compile(loss='binary_crossentropy',optimizer='adam',metrics=['accuracy'])
-        model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs, verbose=verbose, callbacks=[tensorboard])
+        model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+        model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs,
+                  verbose=verbose, callbacks=callbacks,
+                  validation_split=0.1)
     else:
         from keras.utils import multi_gpu_model
-        parallel_model = multi_gpu_model(model, gpus=no_GPU) 
-        parallel_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=["accuracy"])
-        parallel_model.fit(X_train, y_train, batch_size=batch_size*no_GPU, epochs=epochs, verbose=verbose, callbacks=[tensorboard])
+        parallel_model = multi_gpu_model(model, gpus=no_GPU)
+        parallel_model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+        parallel_model.fit(X_train, y_train, batch_size=batch_size*no_GPU,
+                           epochs=epochs, verbose=verbose,
+                           callbacks=callbacks,
+                           validation_split=0.1)
+    return model
