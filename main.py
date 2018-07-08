@@ -8,6 +8,7 @@ from sklearn.preprocessing import LabelEncoder
 from keras.utils import np_utils
 import CNN
 
+# Read from .mat file
 tr_eeg = loadmat('trimmedData.EEG.mat')
 y = pd.read_csv('label.csv', header=None).values
 EEG = tr_eeg['EEGtrimmed']
@@ -21,7 +22,12 @@ encoded_Y = encoder.transform(y)
 y = np_utils.to_categorical(encoded_Y)
 
 # concatinate all 32 channels
-X = np.array([EEG[i, :, :].flatten() for i in range(EEG.shape[0])])
-X = X.reshape(X.shape[0], X.shape[1], 1)
+X1 = np.array([EEG[i, :, :].flatten() for i in range(EEG.shape[0])])
+X1 = X1.reshape(X.shape[0], X1.shape[1], 1)
 
-CNN.CNN1D(X, y, epochs=20, name='1')
+# channels 5:10
+X2 = np.array([EEG[i, :, 5:10].flatten() for i in range(EEG.shape[0])])
+X2 = X2.reshape(X.shape[0], X2.shape[1], 1)
+
+CNN.CNN1D(X1, y, epochs=500, name='allch')
+CNN.CNN1D(X2, y, epochs=500, name='ch5:10')
