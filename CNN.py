@@ -7,7 +7,7 @@ from keras.models import Sequential
 from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
                           MaxPooling1D, Flatten)
 from keras import callbacks
-import datetime.datetime
+import datetime
 import os
 
 
@@ -18,9 +18,10 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     X_train, _, y_train, _ = train_test_split(X, y, test_size=.1)
 
     TBlog_path = ('./TrainedModels/logs/' +
-                  name+'-'+datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+                  name+'-'+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
-                       datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'/')
+                       datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') +
+                       '/')
     os.makedirs(Model_save_path)
 
     # Call backs
@@ -29,16 +30,18 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
         monitor='val_loss', verbose=0, save_best_only=True,
         save_weights_only=False, mode='min', period=1)
 
-    reduceLR = keras.callbacks.ReduceLROnPlateau(
+    reduceLR = callbacks.ReduceLROnPlateau(
         monitor='val_loss', factor=0.1, patience=10, verbose=0,
         mode='auto', min_delta=0.0001, cooldown=0, min_lr=0)
 
-    keras.callbacks.EarlyStopping(
+    EarlyStop = callbacks.EarlyStopping(
         monitor='loss', min_delta=0, patience=20, verbose=0,
         mode='auto', baseline=None)
 
     tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
-    callbacks = [tensorboard, checkpoint, reduceLR, EarlyStopping]
+
+    all_callbacks = [tensorboard, checkpoint, reduceLR, EarlyStop]
+    all_callbacks = [tensorboard]
 
     # Building model
     model = Sequential()
@@ -58,7 +61,7 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     if no_GPU < 2:  # no or single GPU systems
         model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs,
-                  verbose=verbose, callbacks=callbacks,
+                  verbose=verbose, callbacks=all_callbacks,
                   validation_split=0.1)
     else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
@@ -66,6 +69,6 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
         parallel_model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         parallel_model.fit(X_train, y_train, batch_size=batch_size*no_GPU,
                            epochs=epochs, verbose=verbose,
-                           callbacks=callbacks,
+                           callbacks=all_callbacks,
                            validation_split=0.1)
     return model
