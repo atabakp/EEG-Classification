@@ -17,8 +17,10 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=.1)
 
-    TBlog_path = './TrainedModels/logs/'+name+'-'+datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    Model_save_path = './TrainedModels/model/'+name+'/'+'/'+datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'/'
+    TBlog_path = ('./TrainedModels/logs/' +
+                  name+'-'+datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+    Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
+                       datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'/')
     os.makedirs(Model_save_path)
 
     # Call backs
@@ -38,6 +40,7 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
     callbacks = [tensorboard, checkpoint, reduceLR, EarlyStopping]
 
+    # Building model
     model = Sequential()
     model.add(Conv1D(filters=1, kernel_size=5, strides=10,
                      input_shape=(X.shape[1], 1), kernel_initializer='uniform',
@@ -51,12 +54,13 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     model.add(Dropout(0.5))
     model.add(Dense(3, activation='softmax'))
     model.summary()
-    if no_GPU < 2:
+    # Training
+    if no_GPU < 2:  # no or single GPU systems
         model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs,
                   verbose=verbose, callbacks=callbacks,
                   validation_split=0.1)
-    else:
+    else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
         parallel_model = multi_gpu_model(model, gpus=no_GPU)
         parallel_model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
