@@ -9,6 +9,9 @@ from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
 from keras import callbacks
 import datetime
 import os
+from keras.models import Model
+from keras import layers
+import keras
 
 
 def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
