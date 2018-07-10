@@ -10,7 +10,8 @@ import CNN
 from scipy import signal
 import mtspec
 from tqdm import tqdm
-from joblib import Parallel, delayed
+from multiprocessing.dummy import Pool as ThreadPool
+
 # Read from .mat file
 # tr_eeg = loadmat('trimmedData.EEG.mat')
 # y = pd.read_csv('label.csv', header=None).values
@@ -19,11 +20,11 @@ from joblib import Parallel, delayed
 # np.save('EEG', EEG)
 
 # # convert integers to dummy variables (i.e. one hot encoded)
-# encoder = LabelEncoder()
-# encoder.fit(y)
-# encoded_Y = encoder.transform(y)
-# y = np_utils.to_categorical(encoded_Y)
-# np.save('y', y)
+encoder = LabelEncoder()
+encoder.fit(y)
+encoded_Y = encoder.transform(y)
+y = np_utils.to_categorical(encoded_Y)
+np.save('y', y)
 #  0 | 1 | 2| 3| 4| 5| 6| 7 | 8 | 9 | 10|11|12|13|14|15| 16| 17| 18| 19| 20| 21 |22|23|24|25|26| 27|28|29|30| 31 |
 # Fp1|Fp2|F7|F3|Fz|F4|F8|FC5|FC1|FC2|FC6|T7|C3|Cz|C4|T8|TP9|CP5|CP1|CP2|CP6|TP10|P7|P3|Pz|P4|P8|PO9|O1|Oz|O2|PO10|
 
@@ -32,11 +33,13 @@ EEG = np.load('EEG.npy')
 y = np.load('y.npy')
 
 # Wavelet spectogram
-# widths = np.arange(1, 5)
-# cwtmatr = np.stack([np.hstack([signal.cwt(EEG[j, :, i], signal.morlet, widths)
-#                     for i in range(EEG.shape[2])])
-#                     for j in tqdm(range(EEG.shape[0]))])
-# print("Wavelet shape: ", cwtmatr.shape)
+#pool = ThreadPool(4)
+print("satring:")
+widths = np.arange(1, 5)
+cwtmatr = np.stack([np.hstack([signal.cwt(EEG[j, :, i], signal.morlet, widths)
+                    for i in range(EEG.shape[2])])
+                    for j in tqdm(range(EEG.shape[0]))])
+print("Wavelet shape: ", cwtmatr.shape)
 
 # np.save('cwtmatr', cwtmatr)
 cwtmatr = np.abs(np.load('cwtmatr.npy'))
