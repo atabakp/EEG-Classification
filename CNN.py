@@ -108,7 +108,7 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
     # Building model
 
-    myInput = layers.Input(shape=(28, 28, 1))
+    myInput = layers.Input(shape=(X.shape[1], X.shape[2], 1))
     conv1 = layers.Conv2D(16, 3, activation='relu',
                           padding='same', strides=2)(myInput)
     conv2 = layers.Conv2D(32, 3, activation='relu',
