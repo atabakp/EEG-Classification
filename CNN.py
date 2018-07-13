@@ -114,10 +114,12 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     myInput = layers.Input(shape=(X.shape[1], X.shape[2], 1))
     conv1 = layers.Conv2D(16, 3, activation='relu',
                           padding='same', strides=2)(myInput)
-    conv2 = layers.Conv2D(32, 3, activation='relu',
-                          padding='same', strides=2)(conv1)
-    flat = layers.Flatten()(conv2)
-    out_layer = layers.Dense(3, activation='softmax')(flat)
+    # conv2 = layers.Conv2D(32, 3, activation='relu',
+    #                       padding='same', strides=2)(conv1)
+    flat = layers.Flatten()(conv1)
+    dense1 = layers.Dense(512, activation="relu")(flat)
+    dense2 = layers.Dense(512, activation="relu")(dense1)
+    out_layer = layers.Dense(3, activation='softmax')(dense2)
     model = Model(myInput, out_layer)
     model.summary()
     # Training

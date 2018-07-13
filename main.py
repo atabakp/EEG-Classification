@@ -35,9 +35,9 @@ EEG = np.load('EEG.npy')
 y = np.load('y.npy')
 
 
-cwtmatr = np.abs(np.load('cwtmatr.npy'))
-sft = np.abs(np.load('sft.npy'))
-tf = np.load('tf.npy')
+# cwtmatr = np.abs(np.load('cwtmatr.npy'))
+# sft = np.abs(np.load('sft.npy'))
+# tf = np.load('tf.npy')
 
 
 def reshape_1D_conv(X):
@@ -70,31 +70,44 @@ def reshape_2D_conv(X):
 
 
 # ###########################################################
-X_1D = reshape_1D_conv(cwtmatr)
-CNN.CNN1D(X_1D, y, epochs=50, name='Wavelet_1D', no_GPU=4)
-X_2D = reshape_2D_conv(cwtmatr)
-CNN.CNN2D(X_2D, y, epochs=25, name='Wavelet_2D', no_GPU=4)
+# cwtmatr = np.abs(np.load('cwtmatr.npy'))
+# X_1D = reshape_1D_conv(cwtmatr)
+# CNN.CNN1D(X_1D, y, epochs=50, name='Wavelet_1D', no_GPU=4)
+# X_2D = reshape_2D_conv(cwtmatr)
+# CNN.CNN2D(X_2D, y, epochs=25, name='Wavelet_2D', no_GPU=4)
 
 sft = np.abs(np.load('sft50.npy'))
 X_1D = reshape_1D_conv(sft)
-CNN.CNN1D(X_1D, y, epochs=50, name='sft50', no_GPU=4)
+CNN.CNN1D(X_1D, y, epochs=100, name='sft50-1D', no_GPU=4)
 X_2D = reshape_2D_conv(sft)
-CNN.CNN2D(X_2D, y, epochs=25, name='sft50', no_GPU=4)
+CNN.CNN2D(X_2D, y, epochs=100, name='sft50-2D', no_GPU=4)
 
-sft = np.abs(np.load('sft100.npy'))
-X_1D = reshape_1D_conv(sft)
-CNN.CNN1D(X_1D, y, epochs=50, name='sft100', no_GPU=4)
-X_2D = reshape_2D_conv(sft)
-CNN.CNN2D(X_2D, y, epochs=25, name='sft100', no_GPU=4)
+# sft = np.abs(np.load('sft100.npy'))
+# X_1D = reshape_1D_conv(sft)
+# CNN.CNN1D(X_1D, y, epochs=50, name='sft100', no_GPU=4)
+# X_2D = reshape_2D_conv(sft)
+# CNN.CNN2D(X_2D, y, epochs=25, name='sft100', no_GPU=4)
 
-sft = np.abs(np.load('sft150.npy'))
-X_1D = reshape_1D_conv(sft)
-CNN.CNN1D(X_1D, y, epochs=50, name='sft150', no_GPU=4)
-X_2D = reshape_2D_conv(sft)
-CNN.CNN2D(X_2D, y, epochs=25, name='sft150', no_GPU=4)
+# sft = np.abs(np.load('sft150.npy'))
+# X_1D = reshape_1D_conv(sft)
+# CNN.CNN1D(X_1D, y, epochs=50, name='sft150', no_GPU=4)
+# X_2D = reshape_2D_conv(sft)
+# CNN.CNN2D(X_2D, y, epochs=25, name='sft150', no_GPU=4)
 
-tf = np.load('tf.npy')
-X_1D = reshape_1D_conv(tf)
-CNN.CNN1D(X_1D, y, epochs=50, name='tf', no_GPU=4)
-X_2D = reshape_2D_conv(tf)
-CNN.CNN2D(X_2D, y, epochs=25, name='tf', no_GPU=4)
+# tf = np.load('tf50.npy')
+# X_1D = reshape_1D_conv(tf)
+# CNN.CNN1D(X_1D, y, epochs=50, name='tf50', no_GPU=4)
+# X_2D = reshape_2D_conv(tf)
+# CNN.CNN2D(X_2D, y, epochs=25, name='tf50', no_GPU=4)
+
+# tf = np.load('tf100.npy')
+# X_1D = reshape_1D_conv(tf)
+# CNN.CNN1D(X_1D, y, epochs=50, name='tf100', no_GPU=4)
+# X_2D = reshape_2D_conv(tf)
+# CNN.CNN2D(X_2D, y, epochs=25, name='tf100', no_GPU=4)
+
+# tf = np.load('tf150.npy')
+# X_1D = reshape_1D_conv(tf)
+# CNN.CNN1D(X_1D, y, epochs=50, name='tf150', no_GPU=4)
+# X_2D = reshape_2D_conv(tf)
+# CNN.CNN2D(X_2D, y, epochs=25, name='tf150', no_GPU=4)
