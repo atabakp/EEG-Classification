@@ -38,29 +38,32 @@ y = np.load('y.npy')
 #                     for j in tqdm(range(EEG.shape[0]))])
 # print("Wavelet shape: ", cwtmatr.shape)
 
-# np.save('cwtmatr', cwtmatr)
-cwtmatr = np.abs(np.load('cwtmatr.npy'))
-print("Wavelet shape: ", cwtmatr.shape)
+# np.save('cwtmatr5', cwtmatr)
+
+# cwtmatr = np.abs(np.load('cwtmatr.npy'))
+#print("Wavelet shape: ", cwtmatr.shape)
 # Short-Time Fourier Transform
-# sft = np.stack([np.hstack([signal.stft(EEG[j, :, i], fs=100)[2]
-#                for i in range(EEG.shape[2])]) for j in tqdm(range(EEG.shape[0]))])
-# print("STFT shape: ", sft.shape)
-# np.save('sft', sft)
-sft = np.abs(np.load('sft.npy'))
+sft = np.stack([np.hstack([signal.stft(EEG[j, :, i], fs=100)[2]
+               for i in range(EEG.shape[2])]) for j in tqdm(range(EEG.shape[0]))])
 print("STFT shape: ", sft.shape)
-# # Multitaper spectogram
-# tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
-# tf = np.stack([np.hstack(
-#     [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
-#                               fs=100, window=tapers[:, t],
-#                               nperseg=tapers.shape[0])[2]
-#                               for t in range(tapers.shape[1])]), 2), axis=0)
-#         for i in range(EEG.shape[2])])
-#                               for j in tqdm(range(EEG.shape[0]))])
-# print("MultiTaper shape: ", tf.shape)
-# np.save('tf', tf)
-tf = np.load('tf.npy')
+np.save('sft100', sft)
+print("sf100 save")
+#sft = np.abs(np.load('sft.npy'))
+print("STFT shape: ", sft.shape)
+# Multitaper spectogram
+tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
+tf = np.stack([np.hstack(
+    [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
+                              fs=100, window=tapers[:, t],
+                              nperseg=tapers.shape[0])[2]
+                              for t in range(tapers.shape[1])]), 2), axis=0)
+        for i in range(EEG.shape[2])])
+                              for j in tqdm(range(EEG.shape[0]))])
 print("MultiTaper shape: ", tf.shape)
+np.save('tf100', tf)
+print("done")
+# tf = np.load('tf.npy')
+# print("MultiTaper shape: ", tf.shape)
 
 # # channels 0:22
 # X1 = np.array([EEG[i, :, 0:22].flatten() for i in range(EEG.shape[0])])
