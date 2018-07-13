@@ -11,7 +11,7 @@ import CNN
 from scipy import signal
 import mtspec
 from tqdm import tqdm
-from multiprocessing.dummy import Pool as ThreadPool
+
 
 
 # Read from .mat file
@@ -70,10 +70,31 @@ def reshape_2D_conv(X):
 
 
 # ###########################################################
+X_1D = reshape_1D_conv(cwtmatr)
+CNN.CNN1D(X_1D, y, epochs=50, name='Wavelet_1D', no_GPU=4)
+X_2D = reshape_2D_conv(cwtmatr)
+CNN.CNN2D(X_2D, y, epochs=25, name='Wavelet_2D', no_GPU=4)
 
-print("X_wave_1d shape: ", X_wave_1d.shape)
-CNN.CNN1D(X_wave_1d, y, epochs=50, name='STFT_1D', no_GPU=4)
+sft = np.abs(np.load('sft50.npy'))
+X_1D = reshape_1D_conv(sft)
+CNN.CNN1D(X_1D, y, epochs=50, name='sft50', no_GPU=4)
+X_2D = reshape_2D_conv(sft)
+CNN.CNN2D(X_2D, y, epochs=25, name='sft50', no_GPU=4)
 
+sft = np.abs(np.load('sft100.npy'))
+X_1D = reshape_1D_conv(sft)
+CNN.CNN1D(X_1D, y, epochs=50, name='sft100', no_GPU=4)
+X_2D = reshape_2D_conv(sft)
+CNN.CNN2D(X_2D, y, epochs=25, name='sft100', no_GPU=4)
 
-print("X_wavelet shape: ", X_wavelet.shape)
-CNN.CNN2D(X_wavelet, y, epochs=25, name='STFT_2D', no_GPU=4)
+sft = np.abs(np.load('sft150.npy'))
+X_1D = reshape_1D_conv(sft)
+CNN.CNN1D(X_1D, y, epochs=50, name='sft150', no_GPU=4)
+X_2D = reshape_2D_conv(sft)
+CNN.CNN2D(X_2D, y, epochs=25, name='sft150', no_GPU=4)
+
+tf = np.load('tf.npy')
+X_1D = reshape_1D_conv(tf)
+CNN.CNN1D(X_1D, y, epochs=50, name='tf', no_GPU=4)
+X_2D = reshape_2D_conv(tf)
+CNN.CNN2D(X_2D, y, epochs=25, name='tf', no_GPU=4)

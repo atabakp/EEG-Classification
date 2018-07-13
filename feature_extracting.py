@@ -23,8 +23,8 @@ def wave_spec(EEG, width, wavelet=signal.morlet, filename=None):
 # Short-Time Fourier Transform
 def short_time_ft(EEG, fs=100, filename=None):
     sft = np.stack([np.hstack([signal.stft(EEG[j, :, i], fs=fs)[2]
-                   for i in range(EEG.shape[2])])
-                   for j in tqdm(range(EEG.shape[0]))])
+                    for i in range(EEG.shape[2])])
+                    for j in tqdm(range(EEG.shape[0]))])
     print("STFT shape: ", sft.shape)
     if filename is None:
         np.save('sft'+str(fs), sft)
