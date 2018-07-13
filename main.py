@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
 import pandas as pd
 import numpy as np
 from scipy.io import loadmat
@@ -10,7 +11,9 @@ import CNN
 from scipy import signal
 import mtspec
 from tqdm import tqdm
-from joblib import Parallel, delayed
+
+
+
 # Read from .mat file
 # tr_eeg = loadmat('trimmedData.EEG.mat')
 # y = pd.read_csv('label.csv', header=None).values
@@ -18,7 +21,7 @@ from joblib import Parallel, delayed
 # EEG = np.moveaxis(EEG, -1, 0)
 # np.save('EEG', EEG)
 
-# # convert integers to dummy variables (i.e. one hot encoded)
+# # # convert integers to dummy variables (i.e. one hot encoded)
 # encoder = LabelEncoder()
 # encoder.fit(y)
 # encoded_Y = encoder.transform(y)
@@ -31,40 +34,24 @@ from joblib import Parallel, delayed
 EEG = np.load('EEG.npy')
 y = np.load('y.npy')
 
-# Wavelet spectogram
-# widths = np.arange(1, 5)
-# cwtmatr = np.stack([np.hstack([signal.cwt(EEG[j, :, i], signal.morlet, widths)
-#                     for i in range(EEG.shape[2])])
-#                     for j in tqdm(range(EEG.shape[0]))])
-# print("Wavelet shape: ", cwtmatr.shape)
 
-# np.save('cwtmatr5', cwtmatr)
+cwtmatr = np.abs(np.load('cwtmatr.npy'))
+sft = np.abs(np.load('sft.npy'))
+tf = np.load('tf.npy')
 
-# cwtmatr = np.abs(np.load('cwtmatr.npy'))
-#print("Wavelet shape: ", cwtmatr.shape)
-# Short-Time Fourier Transform
-sft = np.stack([np.hstack([signal.stft(EEG[j, :, i], fs=100)[2]
-               for i in range(EEG.shape[2])]) for j in tqdm(range(EEG.shape[0]))])
-print("STFT shape: ", sft.shape)
-np.save('sft100', sft)
-print("sf100 save")
-#sft = np.abs(np.load('sft.npy'))
-print("STFT shape: ", sft.shape)
-# Multitaper spectogram
-tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
-tf = np.stack([np.hstack(
-    [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
-                              fs=100, window=tapers[:, t],
-                              nperseg=tapers.shape[0])[2]
-                              for t in range(tapers.shape[1])]), 2), axis=0)
-        for i in range(EEG.shape[2])])
-                              for j in tqdm(range(EEG.shape[0]))])
-print("MultiTaper shape: ", tf.shape)
-np.save('tf100', tf)
-print("done")
-# tf = np.load('tf.npy')
-# print("MultiTaper shape: ", tf.shape)
 
+def reshape_1D_conv(X):
+    X_rashaped = np.array([X[i, :, :].flatten()
+                          for i in range(X.shape[0])])
+    X_rashaped = X_rashaped.reshape(X_rashaped.shape[0],
+                                    X_rashaped.shape[1],
+                                    1)
+    return X_rashaped
+
+
+def reshape_2D_conv(X):
+    X_reshaped = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
+    return X_reshaped
 # # channels 0:22
 # X1 = np.array([EEG[i, :, 0:22].flatten() for i in range(EEG.shape[0])])
 # X1 = X1.reshape(X1.shape[0], X1.shape[1], 1)
@@ -83,14 +70,31 @@ print("done")
 
 
 # ###########################################################
-print("Rshaping....")
-cwtmatr = sft
-X_wave_1d = np.array([cwtmatr[i, :, :].flatten()
-                     for i in range(cwtmatr.shape[0])])
-X_wave_1d = X_wave_1d.reshape(X_wave_1d.shape[0], X_wave_1d.shape[1], 1)
-print("X_wave_1d shape: ", X_wave_1d.shape)
-CNN.CNN1D(X_wave_1d, y, epochs=50, name='STFT_1D', no_GPU=4)
+X_1D = reshape_1D_conv(cwtmatr)
+CNN.CNN1D(X_1D, y, epochs=50, name='Wavelet_1D', no_GPU=4)
+X_2D = reshape_2D_conv(cwtmatr)
+CNN.CNN2D(X_2D, y, epochs=25, name='Wavelet_2D', no_GPU=4)
 
-X_wavelet = cwtmatr.reshape(cwtmatr.shape[0], cwtmatr.shape[1], cwtmatr.shape[2], 1)
-print("X_wavelet shape: ", X_wavelet.shape)
-CNN.CNN2D(X_wavelet, y, epochs=25, name='STFT_2D', no_GPU=4)
+sft = np.abs(np.load('sft50.npy'))
+X_1D = reshape_1D_conv(sft)
+CNN.CNN1D(X_1D, y, epochs=50, name='sft50', no_GPU=4)
+X_2D = reshape_2D_conv(sft)
+CNN.CNN2D(X_2D, y, epochs=25, name='sft50', no_GPU=4)
+
+sft = np.abs(np.load('sft100.npy'))
+X_1D = reshape_1D_conv(sft)
+CNN.CNN1D(X_1D, y, epochs=50, name='sft100', no_GPU=4)
+X_2D = reshape_2D_conv(sft)
+CNN.CNN2D(X_2D, y, epochs=25, name='sft100', no_GPU=4)
+
+sft = np.abs(np.load('sft150.npy'))
+X_1D = reshape_1D_conv(sft)
+CNN.CNN1D(X_1D, y, epochs=50, name='sft150', no_GPU=4)
+X_2D = reshape_2D_conv(sft)
+CNN.CNN2D(X_2D, y, epochs=25, name='sft150', no_GPU=4)
+
+tf = np.load('tf.npy')
+X_1D = reshape_1D_conv(tf)
+CNN.CNN1D(X_1D, y, epochs=50, name='tf', no_GPU=4)
+X_2D = reshape_2D_conv(tf)
+CNN.CNN2D(X_2D, y, epochs=25, name='tf', no_GPU=4)
