@@ -176,15 +176,15 @@ def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     model = Sequential()
     model.add(Dense(
         input_dim=X.shape[1],
-        units=X.shape[1],
-        activation="relu"))
-
-    model.add(Dense(
-        units=2000,
-        activation="relu"))
-
-    model.add(Dense(
         units=1000,
+        activation="relu"))
+
+    model.add(Dense(
+        units=500,
+        activation="relu"))
+
+    model.add(Dense(
+        units=200,
         activation="relu"))
 
     model.add(Dense(
@@ -192,11 +192,7 @@ def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
         activation="relu"))
 
     model.add(Dense(
-        units=256,
-        activation="relu"))
-
-    model.add(Dense(
-        units=256,
+        units=100,
         activation="relu"))
 
     model.add(Dense(units=3,

@@ -78,7 +78,7 @@ sft = np.abs(np.load('sft50.npy'))
 X_dense = np.array([sft[i, :, :].flatten()
                     for i in range(sft.shape[0])])
 print(X_dense.shape)
-CNN.Dense_NN(X_dense, y, epochs=100, name='Dense-6-sft', no_GPU=4, 
+CNN.Dense_NN(X_dense, y, epochs=100, name='Dense-6-sft', no_GPU=4,
              batch_size=10)
 
 # sft = np.abs(np.load('sft50.npy'))
