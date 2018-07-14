@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import numpy as np
 from scipy import signal
 import tqdm
 
@@ -52,3 +53,17 @@ def short_time_ft(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
     else:
         np.save(filename, tf)
         print("Saved as:", filename)
+
+
+def short_time_ft_32(EEG, fs=100, filename=None):
+    sft = np.stack([signal.stft(EEG[j, :, i], fs=100, nperseg=40)[2]
+                   for i in range(EEG.shape[2])]
+                   for j in tqdm(range(EEG.shape[0])))
+    print("STFT shape: ", sft.shape)
+    if filename is None:
+        np.save('sft'+str(fs), sft)
+        print("Saved as:", 'sft'+str(fs))
+    else:
+        np.save(filename, sft)
+        print("Saved as:", filename)
+    return sft

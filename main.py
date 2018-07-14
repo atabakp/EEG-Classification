@@ -73,19 +73,18 @@ def reshape_2D_conv(X):
 # CNN.CNN1D(X_1D, y, epochs=50, name='Wavelet_1D', no_GPU=4)
 # X_2D = reshape_2D_conv(cwtmatr)
 # CNN.CNN2D(X_2D, y, epochs=25, name='Wavelet_2D', no_GPU=4)
-print("reshaping...")
-sft = np.abs(np.load('sft50.npy'))
-X_dense = np.array([sft[i, :, :].flatten()
-                    for i in range(sft.shape[0])])
-print(X_dense.shape)
-CNN.Dense_NN(X_dense, y, epochs=100, name='Dense-6-sft', no_GPU=4,
-             batch_size=10)
+
+sft = np.abs(np.load('sft_32_100.npy'))
+print(sft.shape)
+
+# CNN.Dense_NN(X_dense, y, epochs=100, name='Dense-6-sft', no_GPU=4,
+#              batch_size=10)
 
 # sft = np.abs(np.load('sft50.npy'))
 # X_1D = reshape_1D_conv(sft)
 # CNN.CNN1D(X_1D, y, epochs=100, name='sft50-1D', no_GPU=4)
-# X_2D = reshape_2D_conv(sft)
-# CNN.CNN2D(X_2D, y, epochs=100, name='sft50-2D', no_GPU=4)
+X_2D = sft
+CNN.CNN2D(X_2D, y, epochs=100, name='sft100-2D_32', no_GPU=4)
 
 # sft = np.abs(np.load('sft100.npy'))
 # X_1D = reshape_1D_conv(sft)
