@@ -110,17 +110,26 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     all_callbacks = [tensorboard]
 
     # Building model
+    model = Sequential()
+    model.add(Conv2D(32, (3, 3), data_format="channels_last",
+              input_shape=(X.shape[0], X.shape[1], X.shape[2])))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    myInput = layers.Input(shape=(X.shape[1], X.shape[2], 1))
-    conv1 = layers.Conv2D(16, 3, activation='relu',
-                          padding='same', strides=2)(myInput)
-    # conv2 = layers.Conv2D(32, 3, activation='relu',
-    #                       padding='same', strides=2)(conv1)
-    flat = layers.Flatten()(conv1)
-    dense1 = layers.Dense(512, activation="relu")(flat)
-    dense2 = layers.Dense(512, activation="relu")(dense1)
-    out_layer = layers.Dense(3, activation='softmax')(dense2)
-    model = Model(myInput, out_layer)
+    model.add(Conv2D(32, (3, 3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(Conv2D(64, (3, 3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+
+    model.add(Flatten())  
+    model.add(Dense(64))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(3))
+    model.add(Activation('softmax'))
     model.summary()
     # Training
     if no_GPU < 2:  # no or single GPU systems
