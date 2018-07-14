@@ -12,8 +12,6 @@ from scipy import signal
 import mtspec
 from tqdm import tqdm
 
-
-
 # Read from .mat file
 # tr_eeg = loadmat('trimmedData.EEG.mat')
 # y = pd.read_csv('label.csv', header=None).values
@@ -42,7 +40,7 @@ y = np.load('y.npy')
 
 def reshape_1D_conv(X):
     X_rashaped = np.array([X[i, :, :].flatten()
-                          for i in range(X.shape[0])])
+                           for i in range(X.shape[0])])
     X_rashaped = X_rashaped.reshape(X_rashaped.shape[0],
                                     X_rashaped.shape[1],
                                     1)
