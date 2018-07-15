@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
                           MaxPooling1D, Flatten, Conv2D, Activation, 
-                          MaxPooling2D)
+                          MaxPooling2D, BatchNormalization)
 from keras import callbacks
 import datetime
 import os
@@ -112,24 +112,40 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
     # Building model
     model = Sequential()
-    model.add(Conv2D(5, (3, 3), data_format="channels_first",
-              input_shape=(X.shape[1], X.shape[2], X.shape[3])))
+    model.add(Conv2D(64, (3, 2), data_format="channels_first",
+              input_shape=(X.shape[1], X.shape[2], X.shape[3]),
+              strides=[2, 1]))
+    model.add(BatchNormalization())
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(10, (3, 3)))
+    model.add(Conv2D(32, (3, 2), data_format="channels_first",
+              strides=[2, 1]))
+    model.add(BatchNormalization())
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    # model.add(Conv2D(64, (3, 3)))
+    # model.add(Conv2D(16, (3, 2), data_format="channels_first",
+    #           strides=[1, 1]))
+    # model.add(BatchNormalization())
     # model.add(Activation('relu'))
-    # model.add(MaxPooling2D())
 
+    # model.add(Conv2D(5, (3, 2), data_format="channels_first",
+    #           strides=[2, 1]))
+    # model.add(BatchNormalization())
+    # model.add(Activation('relu'))
+
+    # model.add(Conv2D(5, (3, 2), data_format="channels_first",
+    #           strides=[2, 1]))
+    # model.add(BatchNormalization())
+    # model.add(Activation('relu'))
+
+    model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
+    # model.add(Dense(512, activation='relu'))
+    # model.add(Dense(512, activation='relu'))
+    # model.add(Dense(512, activation='relu'))
+    model.add(Dense(2000, activation='relu'))
+    model.add(Dense(800, activation='relu'))
+    model.add(Dense(200, activation='relu'))
     model.add(Dense(3, activation='softmax'))
     model.summary()
     # Training
