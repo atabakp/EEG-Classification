@@ -61,8 +61,8 @@ def short_time_ft_32(EEG, fs=100, filename=None):
                    for j in tqdm(range(EEG.shape[0])))
     print("STFT shape: ", sft.shape)
     if filename is None:
-        np.save('sft'+str(fs), sft)
-        print("Saved as:", 'sft'+str(fs))
+        np.save('sft_32'+str(fs), sft)
+        print("Saved as:", 'sft_32'+str(fs))
     else:
         np.save(filename, sft)
         print("Saved as:", filename)
