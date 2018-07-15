@@ -74,6 +74,7 @@ def reshape_2D_conv(X):
 # X_2D = reshape_2D_conv(cwtmatr)
 # CNN.CNN2D(X_2D, y, epochs=25, name='Wavelet_2D', no_GPU=4)
 
+
 sft = np.abs(np.load('sft_32_100.npy'))
 print(sft.shape)
 
