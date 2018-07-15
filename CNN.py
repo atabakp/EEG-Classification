@@ -80,7 +80,7 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
           no_GPU=0, batch_size=32, optimizer='adam',
-          loss='binary_crossentropy', metrics=['accuracy']):
+          loss='binary_crossentropy', metrics=['accuracy'], shuffle=False):
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=.1)
 
@@ -108,7 +108,7 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
 
     all_callbacks = [tensorboard, checkpoint, reduceLR, EarlyStop]
-    all_callbacks = [tensorboard]
+    # all_callbacks = [tensorboard]
 
     # Building model
     model = Sequential()
@@ -144,7 +144,9 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     # model.add(Dense(512, activation='relu'))
     # model.add(Dense(512, activation='relu'))
     model.add(Dense(2000, activation='relu'))
+    #model.add(Dropout(0.5))
     model.add(Dense(800, activation='relu'))
+    #model.add(Dropout(0.5))
     model.add(Dense(200, activation='relu'))
     model.add(Dense(3, activation='softmax'))
     model.summary()
@@ -153,7 +155,7 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
         model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs,
                   verbose=verbose, callbacks=all_callbacks,
-                  validation_split=0.1)
+                  validation_split=0.1, shuffle=shuffle)
     else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
         parallel_model = multi_gpu_model(model, gpus=no_GPU)
@@ -161,7 +163,7 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
         parallel_model.fit(X_train, y_train, batch_size=batch_size*no_GPU,
                            epochs=epochs, verbose=verbose,
                            callbacks=all_callbacks,
-                           validation_split=0.1)
+                           validation_split=0.1, shuffle=shuffle)
     return model
 
 

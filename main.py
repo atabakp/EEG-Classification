@@ -84,9 +84,10 @@ print(sft.shape)
 # sft = np.abs(np.load('sft50.npy'))
 # X_1D = reshape_1D_conv(sft)
 # CNN.CNN1D(X_1D, y, epochs=100, name='sft50-1D', no_GPU=4)
+# for i in range(5):
 X_2D = sft
-CNN.CNN2D(X_2D, y, epochs=100, name='sft100-2D_32', no_GPU=4)
-
+model = CNN.CNN2D(X_2D, y, epochs=100, name='sft100-2D_32', no_GPU=4, shuffle=True)
+    # model.save(str(i)+'model.{epoch}-{val_loss:.3f}-{acc:.5f}.hdf5')
 # sft = np.abs(np.load('sft100.npy'))
 # X_1D = reshape_1D_conv(sft)
 # CNN.CNN1D(X_1D, y, epochs=50, name='sft100', no_GPU=4)
