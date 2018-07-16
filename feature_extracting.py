@@ -74,7 +74,8 @@ def short_time_ft(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
         [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
                                   fs=fs, window=tapers[:, t],
                                   nperseg=tapers.shape[0])[2]
-                                  for t in range(tapers.shape[1])]), 2), axis=0)
+                                  for t in range(tapers.shape[1])]), 2),
+                 axis=0)
             for i in range(EEG.shape[2])])
                                   for j in tqdm(range(EEG.shape[0]))])
     print("MultiTaper shape: ", tf.shape)
@@ -93,7 +94,7 @@ def short_time_ft(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
     tf = np.stack(
         [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
                                  fs=100, window=tapers[:, t],
-                                 nperseg=tapers.shape[0])[2] 
+                                 nperseg=tapers.shape[0])[2]
                                  for t in range(tapers.shape[1])]), 2), axis=0)
          for i in range(EEG.shape[2])] for j in range(3))
     print("MultiTaper shape: ", tf.shape)
@@ -103,8 +104,3 @@ def short_time_ft(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
     else:
         np.save(filename, tf)
         print("Saved as:", filename)
-
-
-
-
-
