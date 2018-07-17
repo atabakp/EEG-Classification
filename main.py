@@ -29,9 +29,8 @@ from tqdm import tqdm
 # Fp1|Fp2|F7|F3|Fz|F4|F8|FC5|FC1|FC2|FC6|T7|C3|Cz|C4|T8|TP9|CP5|CP1|CP2|CP6|TP10|P7|P3|Pz|P4|P8|PO9|O1|Oz|O2|PO10|
 
 # Read data
-EEG = np.load('EEG.npy')
+#EEG = np.load('EEG.npy')
 y = np.load('y.npy')
-
 
 # cwtmatr = np.abs(np.load('cwtmatr.npy'))
 # sft = np.abs(np.load('sft.npy'))
@@ -75,8 +74,6 @@ def reshape_2D_conv(X):
 # CNN.CNN2D(X_2D, y, epochs=25, name='Wavelet_2D', no_GPU=4)
 
 
-sft = np.abs(np.load('sft_32_100.npy'))
-print(sft.shape)
 
 # CNN.Dense_NN(X_dense, y, epochs=100, name='Dense-6-sft', no_GPU=4,
 #              batch_size=10)
@@ -85,8 +82,10 @@ print(sft.shape)
 # X_1D = reshape_1D_conv(sft)
 # CNN.CNN1D(X_1D, y, epochs=100, name='sft50-1D', no_GPU=4)
 
-X_2D = sft
-model = CNN.CNN2D(X_2D, y, epochs=100, name='sft100-2D_32', no_GPU=4, shuffle=True)
+X_2D = np.abs(np.load('wave_2d_10_7:21.npy'))
+print(X_2D.shape)
+model = CNN.CNN2D(X_2D, y, epochs=100, name='wave_2d_5', no_GPU=4, shuffle=True, optimizer='adam', batch_size=1,
+                  loss='binary_crossentropy', metrics=['accuracy'], test_split_size=0.1)
 
 # sft = np.abs(np.load('sft100.npy'))
 # X_1D = reshape_1D_conv(sft)

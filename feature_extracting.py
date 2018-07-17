@@ -27,7 +27,7 @@ def wave_spec_2D(EEG, width=40, wavelet=signal.morlet, filename=None):
     widths = np.arange(1, width)
     cwtmatr = np.stack([signal.cwt(EEG[j, :, i], signal.morlet, widths)
                        for i in range(EEG.shape[2])]
-                       for j in range(5))
+                       for j in tqdm(range(EEG.shape[0])))
     print("Wavelet shape: ", cwtmatr.shape)
     if filename is None:
         np.save('cwtmatr_2D'+str(width), cwtmatr)
@@ -67,7 +67,7 @@ def short_time_ft_2D(EEG, fs=100, filename=None):
 
 
 # Multitaper spectogram
-def short_time_ft(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
+def multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
                   filename=None):
     tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
     tf = np.stack([np.hstack(
@@ -88,15 +88,15 @@ def short_time_ft(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
 
 
 # Multitaper spectogram 2D
-def short_time_ft(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
-                  filename=None):
+def multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
+                     filename=None):
     tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
     tf = np.stack(
         [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
                                  fs=100, window=tapers[:, t],
                                  nperseg=tapers.shape[0])[2]
                                  for t in range(tapers.shape[1])]), 2), axis=0)
-         for i in range(EEG.shape[2])] for j in range(3))
+         for i in range(EEG.shape[2])] for j in tqdm(range(EEG.shape[0])))
     print("MultiTaper shape: ", tf.shape)
     if filename is None:
         np.save('tf_2D'+str(fs), tf)

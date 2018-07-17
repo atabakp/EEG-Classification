@@ -21,7 +21,7 @@ import pandas as pd
 EEG = np.load('EEG.npy')
 temp_list = []
 
-for i in range(5):
+for i in range(EEG.shape[0]):
     f7 = EEG[i, :, 2]
     f3 = EEG[i, :, 3]
     fz = EEG[i, :, 4]
