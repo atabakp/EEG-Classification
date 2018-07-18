@@ -12,7 +12,7 @@ def wave_spec(EEG, width=5, wavelet=signal.morlet, filename=None):
     widths = np.arange(1, width)
     cwtmatr = np.stack([np.hstack([signal.cwt(EEG[j, :, i], wavelet, widths)
                         for i in range(EEG.shape[2])])
-                        for j in tqdm(range(EEG.shape[0]))])
+                        for j in range(EEG.shape[0])])
     print("Wavelet shape: ", cwtmatr.shape)
     if filename is None:
         np.save('cwtmatr'+str(width), cwtmatr)
