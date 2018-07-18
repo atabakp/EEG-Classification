@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from scipy import signal
-import tqdm
+from tqdm import tqdm
 import mtspec
 
 
@@ -12,7 +12,7 @@ def wave_spec(EEG, width=5, wavelet=signal.morlet, filename=None):
     widths = np.arange(1, width)
     cwtmatr = np.stack([np.hstack([signal.cwt(EEG[j, :, i], wavelet, widths)
                         for i in range(EEG.shape[2])])
-                        for j in range(EEG.shape[0])])
+                        for j in tqdm(range(EEG.shape[0]))])
     print("Wavelet shape: ", cwtmatr.shape)
     if filename is None:
         np.save('cwtmatr'+str(width), cwtmatr)
@@ -54,7 +54,7 @@ def short_time_ft(EEG, fs=100, filename=None):
 
 # Short-Time Fourier Transform 2D
 def short_time_ft_2D(EEG, fs=100, filename=None):
-    sft = np.stack([signal.stft(EEG[j, :, i], fs=100, nperseg=40)[2]
+    sft = np.stack([signal.stft(EEG[j, :, i], fs=fs, nperseg=40)[2]
                    for i in range(EEG.shape[2])]
                    for j in tqdm(range(EEG.shape[0])))
     print("STFT shape: ", sft.shape)
@@ -94,7 +94,7 @@ def multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
     tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
     tf = np.stack(
         [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
-                                 fs=100, window=tapers[:, t],
+                                 fs=fs, window=tapers[:, t],
                                  nperseg=tapers.shape[0])[2]
                                  for t in range(tapers.shape[1])]), 2), axis=0)
          for i in range(EEG.shape[2])] for j in tqdm(range(EEG.shape[0])))
@@ -111,11 +111,11 @@ def main():
     EEG = np.load('EEG.npy')
     # Wavelet Spectogram concatinate
     print('Wavelet 1D width=50...')
-    wave_spec(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
+    #wave_spec(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
 
     print('Wavelet 2D width=50...')
     # Wavelet Spectogram 2D
-    wave_spec_2D(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
+    #wave_spec_2D(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
 
     # Short-Time Fourier Transform
     print('SFTF 1D fs=50...')
