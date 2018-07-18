@@ -6,7 +6,7 @@ import tqdm
 
 
 # Wavelet Spectogram
-def wave_spec(EEG, width, wavelet=signal.morlet, filename=None):
+def wave_spec(EEG, width=5, wavelet=signal.morlet, filename=None):
 
     widths = np.arange(1, width)
     cwtmatr = np.stack([np.hstack([signal.cwt(EEG[j, :, i], wavelet, widths)
@@ -22,7 +22,7 @@ def wave_spec(EEG, width, wavelet=signal.morlet, filename=None):
 
 
 # Wavelet Spectogram 2D
-def wave_spec_2D(EEG, width=40, wavelet=signal.morlet, filename=None):
+def wave_spec_2D(EEG, width=5, wavelet=signal.morlet, filename=None):
 
     widths = np.arange(1, width)
     cwtmatr = np.stack([signal.cwt(EEG[j, :, i], signal.morlet, widths)
@@ -104,3 +104,41 @@ def multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
     else:
         np.save(filename, tf)
         print("Saved as:", filename)
+
+
+def main():
+    EEG = np.load('EEG.npy')
+    # Wavelet Spectogram concatinate
+    wave_spec(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
+
+    # Wavelet Spectogram 2D
+    wave_spec_2D(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
+
+    # Short-Time Fourier Transform
+    short_time_ft(EEG, fs=50, filename='stft-1D-50')
+    short_time_ft(EEG, fs=100, filename='stft-1D-100')
+    short_time_ft(EEG, fs=150, filename='stft-1D-150')
+
+    # Short-Time Fourier Transform 2D
+    short_time_ft_2D(EEG, fs=50, filename='stft-2D-50')
+    short_time_ft_2D(EEG, fs=100, filename='stft-2D-100')
+    short_time_ft_2D(EEG, fs=150, filename='stft-2D-150')
+
+    # Multitaper spectogram
+    multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=50,
+               filename='mt-1D-50')
+    multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
+               filename='mt-1D-100')
+    multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=150,
+               filename='mt-1D-150')
+
+    # Multitaper spectogram 2D
+    multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=50,
+                  filename='mt-2D-50')
+    multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
+                  filename='mt-2D-100')
+    multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=150,
+                  filename='mt-2D-510')
+
+if __name__ == "__main__":
+    main()
