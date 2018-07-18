@@ -3,6 +3,7 @@
 import numpy as np
 from scipy import signal
 import tqdm
+import mtspec
 
 
 # Wavelet Spectogram
@@ -68,7 +69,7 @@ def short_time_ft_2D(EEG, fs=100, filename=None):
 
 # Multitaper spectogram
 def multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
-                  filename=None):
+               filename=None):
     tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
     tf = np.stack([np.hstack(
         [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
@@ -89,7 +90,7 @@ def multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
 
 # Multitaper spectogram 2D
 def multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
-                     filename=None):
+                  filename=None):
     tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
     tf = np.stack(
         [np.mean(np.power(np.abs([signal.stft(EEG[j, :, i],
@@ -138,7 +139,7 @@ def main():
     multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
                   filename='mt-2D-100')
     multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=150,
-                  filename='mt-2D-510')
+                  filename='mt-2D-150')
 
 if __name__ == "__main__":
     main()
