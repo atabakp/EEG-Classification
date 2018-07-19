@@ -150,10 +150,10 @@ def main():
     print('multitaper 2D fs=50...')
     multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=50,
                   filename='mt-2D-50')
-    print('multitaper 2D fs=100...')             
+    print('multitaper 2D fs=100...')
     multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
                   filename='mt-2D-100')
-    print('multitaper 2D fs=150...')             
+    print('multitaper 2D fs=150...')
     multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=150,
                   filename='mt-2D-150')
 

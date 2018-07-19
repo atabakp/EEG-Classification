@@ -35,7 +35,7 @@ X = np.load('EEG.npy')
 X = reshape_1D_conv(X)
 CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-allch', num_GPU=num_GPU,
           optimizer='adam', batch_size=32, loss='binary_crossentropy',
-          metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+          metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
 # channels 7:21
@@ -43,78 +43,78 @@ X = np.load('EEG.npy')
 X = reshape_1D_conv(X[:, :, 7:21])
 CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-ch0:22', num_GPU=num_GPU,
           optimizer='adam', batch_size=32, loss='binary_crossentropy',
-          metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+          metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 # Short Time Fourier 1D
 X = np.abs(np.load('stft-1D-50.npy'))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='stft-1D-50', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('stft-1D-100.npy'))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='stft-1D-100', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('stft-1D-150.npy'))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='stft-1D-150', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 # Short Time Fourier 1D with log
 X = np.log10(np.abs(np.load('stft-1D-50.npy')))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='stft-1D-50-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('stft-1D-100.npy')))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='stft-1D-100-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('stft-1D-150.npy')))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='stft-1D-150-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
 # Short Time Fourier 2D
 X = np.abs(np.load('stft-2D-50.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-50', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('stft-2D-100.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-100', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('stft-2D-100.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-150', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 # STFT 2D with Log Transformation
 X = np.log10(np.abs(np.load('stft-2D-50.npy')))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-50-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('stft-2D-100.npy')))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-100-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('stft-2D-150.npy')))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-150-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
 # Multitaper 1D
@@ -122,71 +122,71 @@ X = np.abs(np.load('mt-1D-50'))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='mt-1D-50', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('mt-1D-100.npy'))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='mt-1D-100', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('mt-1D-150.npy'))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='mt-1D-150', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 # MultiTaper 1D with log
 X = np.log10(np.abs(np.load('mt-1D-50.npy')))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='mt-1D-50-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('mt-1D-100.npy')))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='mt-1D-100-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('mt-1D-150.npy')))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='mt-1D-150-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
 # Multitaper 2D
 X = np.abs(np.load('mt-2D-50.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='mt-2D-50', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('mt-2D-100.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='mt-1D-100', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('mt-2D-150.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='mt-1D-150', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 # Multitaper 2D with Log
 X = np.log10(np.abs(np.load('stft-2D-50.npy')))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-50-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('stft-2D-100.npy')))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-100-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.log10(np.abs(np.load('stft-2D-150.npy')))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-150-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
 # wavelet
@@ -194,9 +194,9 @@ X = np.log10(np.abs(np.load('cwt-1D-5.npy')))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='cwt-1D-5-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 X = np.abs(np.load('cwt-2D-5.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='cwt-2D-5', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1 ,verbose=verbose)
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)

@@ -22,7 +22,8 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
     TBlog_path = ('./TrainedModels/logs/' +
-                  name+'-'+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+                  name+'-'+datetime.datetime.now()
+                  .strftime('%Y-%m-%d_%H-%M-%S'))
     Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
                        datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') +
                        '/')
@@ -89,7 +90,8 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
     TBlog_path = ('./TrainedModels/logs/' +
-                  name+'-'+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+                  name+'-'+datetime.datetime.now()
+                  .strftime('%Y-%m-%d_%H-%M-%S'))
     Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
                        datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') +
                        '/')
@@ -179,7 +181,8 @@ def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
     TBlog_path = ('./TrainedModels/logs/' +
-                  name+'-'+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+                  name+'-'+datetime.datetime.now()
+                  .strftime('%Y-%m-%d_%H-%M-%S'))
     Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
                        datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') +
                        '/')
@@ -256,7 +259,8 @@ def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
     TBlog_path = ('./TrainedModels/logs/' +
-                  name+'-'+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+                  name+'-'+datetime.datetime.now()
+                  .strftime('%Y-%m-%d_%H-%M-%S'))
     Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
                        datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') +
                        '/')
