@@ -111,11 +111,11 @@ def main():
     EEG = np.load('EEG.npy')
     # Wavelet Spectogram concatinate
     print('Wavelet 1D width=50...')
-    #wave_spec(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
+    # wave_spec(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
 
     print('Wavelet 2D width=50...')
     # Wavelet Spectogram 2D
-    #wave_spec_2D(EEG, width=5, wavelet=signal.morlet, filename='cwt-1D-5')
+    # wave_spec_2D(EEG, width=5, wavelet=signal.morlet, filename='cwt-2D-5')
 
     # Short-Time Fourier Transform
     print('SFTF 1D fs=50...')
