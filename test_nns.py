@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import CNN
 
-num_GPU = 0
+num_GPU = 4
 epochs = 2
 verbose = 1
 #  0 | 1 | 2| 3| 4| 5| 6| 7 | 8 | 9 | 10|11|12|13|14|15| 16| 17| 18| 19| 20| 21 |22|23|24|25|26| 27|28|29|30| 31 |
@@ -118,7 +118,7 @@ model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-150-log', num_GPU=num_GPU,
 
 
 # Multitaper 1D
-X = np.abs(np.load('mt-1D-50'))
+X = np.abs(np.load('mt-1D-50.npy'))
 X = reshape_1D_conv(X)
 model = CNN.CNN1D(X, y, epochs=epochs, name='mt-1D-50', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='binary_crossentropy',
