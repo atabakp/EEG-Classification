@@ -46,7 +46,7 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
 
     all_callbacks = [tensorboard, checkpoint, reduceLR, EarlyStop]
-    all_callbacks = [tensorboard]
+    # all_callbacks = [tensorboard]
 
     # Building model
     model = Sequential()
@@ -120,19 +120,19 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     model = Sequential()
     model.add(Conv2D(64, (2, 1), data_format="channels_first",
               input_shape=(X.shape[1], X.shape[2], X.shape[3]),
-              strides=[1, 1]))
+              strides=[2, 1]))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
 
-    # model.add(Conv2D(32, (3, 2), data_format="channels_first",
-    #           strides=[2, 1]))
-    # model.add(BatchNormalization())
-    # model.add(Activation('relu'))
+    model.add(Conv2D(32, (2, 1), data_format="channels_first",
+              strides=[2, 1]))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
 
-    # model.add(Conv2D(16, (3, 2), data_format="channels_first",
-    #           strides=[2, 1]))
-    # model.add(BatchNormalization())
-    # model.add(Activation('relu'))
+    model.add(Conv2D(16, (2, 1), data_format="channels_first",
+              strides=[2, 1]))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
 
     # model.add(Conv2D(5, (3, 2), data_format="channels_first",
     #           strides=[2, 1]))
@@ -150,10 +150,12 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     # model.add(Dense(512, activation='relu'))
     # model.add(Dense(512, activation='relu'))
     model.add(Dense(2000, activation='relu'))
-    # model.add(Dropout(0.5))
+    model.add(Dropout(0.5))
     model.add(Dense(800, activation='relu'))
-    # model.add(Dropout(0.5))
-    model.add(Dense(200, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(500, activation='relu'))
+    model.add(Dense(100, activation='relu'))
+    model.add(Dense(20, activation='relu'))
     model.add(Dense(3, activation='softmax'))
     model.summary()
     # Training

@@ -117,21 +117,21 @@ def main():
     # Wavelet Spectogram 2D
     # wave_spec_2D(EEG, width=5, wavelet=signal.morlet, filename='cwt-2D-5')
 
-    # Short-Time Fourier Transform
-    print('SFTF 1D fs=50...')
-    short_time_ft(EEG, fs=50, filename='stft-1D-50')
-    print('SFTF 1D fs=100...')
-    short_time_ft(EEG, fs=100, filename='stft-1D-100')
-    print('SFTF 1D fs=150...')
-    short_time_ft(EEG, fs=150, filename='stft-1D-150')
+    # # Short-Time Fourier Transform
+    # print('SFTF 1D fs=50...')
+    # short_time_ft(EEG, fs=50, filename='stft-1D-50')
+    # print('SFTF 1D fs=100...')
+    # short_time_ft(EEG, fs=100, filename='stft-1D-100')
+    # print('SFTF 1D fs=150...')
+    # short_time_ft(EEG, fs=150, filename='stft-1D-150')
 
-    # Short-Time Fourier Transform 2D
-    print('SFTF 2D fs=50...')
-    short_time_ft_2D(EEG, fs=50, filename='stft-2D-50')
-    print('SFTF 2D fs=100...')
-    short_time_ft_2D(EEG, fs=100, filename='stft-2D-100')
-    print('SFTF 2D fs=150...')
-    short_time_ft_2D(EEG, fs=150, filename='stft-2D-150')
+    # # Short-Time Fourier Transform 2D
+    # print('SFTF 2D fs=50...')
+    # short_time_ft_2D(EEG, fs=50, filename='stft-2D-50')
+    # print('SFTF 2D fs=100...')
+    # short_time_ft_2D(EEG, fs=100, filename='stft-2D-100')
+    # print('SFTF 2D fs=150...')
+    # short_time_ft_2D(EEG, fs=150, filename='stft-2D-150')
 
     # Multitaper spectogram
     print('multitaper 1D fs=50...')
