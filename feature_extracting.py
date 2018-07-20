@@ -68,7 +68,7 @@ def short_time_ft_2D(EEG, fs=100, filename=None):
 
 
 # Multitaper spectogram
-def multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
+def multitaper(EEG, npts=170, fw=3, number_of_tapers=5, fs=100,
                filename=None):
     tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
     tf = np.stack([np.hstack(
@@ -89,7 +89,7 @@ def multitaper(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
 
 
 # Multitaper spectogram 2D
-def multitaper_2D(EEG, npts=20, fw=3, number_of_tapers=5, fs=100,
+def multitaper_2D(EEG, npts=170, fw=3, number_of_tapers=5, fs=100,
                   filename=None):
     tapers, _, _ = mtspec.dpss(npts=20, fw=3, number_of_tapers=5)
     tf = np.stack(
