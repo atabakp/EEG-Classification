@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
                           MaxPooling1D, Flatten, Conv2D, Activation,
-                          MaxPooling2D, BatchNormalization)
+                          MaxPooling2D, BatchNormalization, LSTM)
 from keras import callbacks
 import datetime
 import os
@@ -347,7 +347,7 @@ def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
     return model
 
 
-def LSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
+def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
          num_GPU=0, batch_size=32, optimizer='adam',
          loss='binary_crossentropy', metrics=['accuracy']):
 
@@ -383,10 +383,10 @@ def LSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
     # Building model
     model = Sequential()
     model = Sequential()
-    model.add(LSTM(100, return_sequences=False,
-                   input_shape=(X.shape[2], X.shape[1])))
-    model.add(Dropout(0.5))
-    # model.add(LSTM(100)) dramatically worse results
+    model.add(LSTM(64,  return_sequences=True,
+              input_shape=(X.shape[1], X.shape[2])))
+    model.add(Dropout(0.2))
+    model.add(LSTM(32))
     model.add(Dense(3, activation='softmax'))
     model.summary()
     # Training
@@ -408,3 +408,6 @@ def LSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
     with open(Model_save_path+name+'.final.json', "w") as json_file:
         json_file.write(model_json)
     return model
+
+
+
