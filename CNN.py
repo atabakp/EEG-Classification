@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
                           MaxPooling1D, Flatten, Conv2D, Activation,
-                          MaxPooling2D, BatchNormalization, LSTM)
+                          MaxPooling2D, BatchNormalization, LSTM, ConvLSTM2D)
 from keras import callbacks
 import datetime
 import os
@@ -17,7 +17,7 @@ import keras
 
 def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
           num_GPU=0, batch_size=32, optimizer='adam',
-          loss='binary_crossentropy', metrics=['accuracy']):
+          loss='categorical_crossentropy', metrics=['accuracy']):
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
@@ -87,7 +87,7 @@ def CNN1D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
           num_GPU=0, batch_size=32, optimizer='adam',
-          loss='binary_crossentropy', metrics=['accuracy'], shuffle=False):
+          loss='categorical_crossentropy', metrics=['accuracy'], shuffle=False):
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
@@ -180,7 +180,7 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='binary_crossentropy', metrics=['accuracy']):
+             loss='categorical_crossentropy', metrics=['accuracy']):
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
@@ -258,7 +258,7 @@ def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='binary_crossentropy', metrics=['accuracy'], shuffle=False):
+             loss='categorical_crossentropy', metrics=['accuracy'], shuffle=False):
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
@@ -349,7 +349,7 @@ def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
          num_GPU=0, batch_size=32, optimizer='adam',
-         loss='binary_crossentropy', metrics=['accuracy']):
+         loss='categorical_crossentropy', metrics=['accuracy']):
 
     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
 
@@ -383,10 +383,21 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     # Building model
     model = Sequential()
     model = Sequential()
-    model.add(LSTM(64,  return_sequences=True,
+
+    # model.add(Conv2D(64, (2, 1), data_format="channels_first",
+    #           input_shape=(X.shape[1], X.shape[2], X.shape[3]),
+    #           strides=[2, 1]))
+    # model.add(BatchNormalization())
+    # model.add(Activation('relu'))
+
+    # model.add(Conv1D(filters=1, kernel_size=5, strides=10,
+    #                  input_shape=(X.shape[1], 1), kernel_initializer='uniform',
+    #                  name='1-Conv1D'))
+    # model.add(LSTM(64,  return_sequences=False))
+    model.add(LSTM(64,  return_sequences=False,
               input_shape=(X.shape[1], X.shape[2])))
-    model.add(Dropout(0.2))
-    model.add(LSTM(32))
+    model.add(Dropout(0.3))
+    # model.add(LSTM(32))
     model.add(Dense(3, activation='softmax'))
     model.summary()
     # Training
@@ -410,4 +421,65 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     return model
 
 
+
+def ConvLSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
+         num_GPU=0, batch_size=32, optimizer='adam',
+         loss='categorical_crossentropy', metrics=['accuracy']):
+
+    X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
+
+    TBlog_path = ('./TrainedModels/logs/' +
+                  name+'-'+datetime.datetime.now()
+                  .strftime('%Y-%m-%d_%H-%M-%S'))
+    Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
+                       datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') +
+                       '/')
+    os.makedirs(Model_save_path)
+
+    # Call backs
+    checkpoint = callbacks.ModelCheckpoint(
+        filepath=Model_save_path+name+'.{epoch}-{val_loss:.3f}.hdf5',
+        monitor='val_loss', verbose=0, save_best_only=True,
+        save_weights_only=False, mode='min', period=1)
+
+    reduceLR = callbacks.ReduceLROnPlateau(
+        monitor='val_loss', factor=0.1, patience=10, verbose=0,
+        mode='auto', min_delta=0.0001, cooldown=0, min_lr=0)
+
+    EarlyStop = callbacks.EarlyStopping(
+        monitor='loss', min_delta=0, patience=20, verbose=0,
+        mode='auto', baseline=None)
+
+    tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
+
+    all_callbacks = [tensorboard, checkpoint, reduceLR, EarlyStop]
+    # all_callbacks = [tensorboard]
+
+    # Building model
+    model = Sequential()
+    model.add(ConvLSTM2D(64,(1,2),  return_sequences=False, input_shape=( 2701, 5, 5,1)))
+    model.add(Dropout(0.3))
+    model.add(Flatten())
+    #model.add(LSTM(32))
+    model.add(Dense(3, activation='softmax'))
+    model.summary()
+    # Training
+    if num_GPU < 2:  # no or single GPU systems
+        model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+        model.fit(X_train, y_train, batch_size=batch_size, epochs=epochs,
+                  verbose=verbose, callbacks=all_callbacks,
+                  validation_split=0.1)
+    else:  # prallelized on multiple GPUs
+        from keras.utils import multi_gpu_model
+        parallel_model = multi_gpu_model(model, gpus=num_GPU)
+        parallel_model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+        parallel_model.fit(X_train, y_train, batch_size=batch_size*num_GPU,
+                           epochs=epochs, verbose=verbose,
+                           callbacks=all_callbacks,
+                           validation_split=0.1)
+    model.save(Model_save_path+name+'.final.hdf5')
+    model_json = model.to_json()
+    with open(Model_save_path+name+'.final.json', "w") as json_file:
+        json_file.write(model_json)
+    return model
 
