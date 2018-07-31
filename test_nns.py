@@ -4,11 +4,6 @@
 import numpy as np
 import pandas as pd
 import CNN
-import talos as ta
-
-
-
-import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
@@ -20,6 +15,12 @@ import os
 from keras.models import Model
 from keras import layers
 import keras
+from keras.wrappers.scikit_learn import KerasClassifier
+from keras.utils import np_utils
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
+from sklearn.preprocessing import LabelEncoder
+from sklearn.pipeline import Pipeline
 
 
 num_GPU = 4
@@ -41,124 +42,6 @@ def reshape_1D_conv(X):
 def reshape_2D_conv(X):
     X_reshaped = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
     return X_reshaped
-
-
-# def CNN2D_grid(x_train, y_train, x_val, y_val, params):
-#     test_split_size = 0.1
-#     shuffle = False
-#     name = 'grid'
-#     X_train, _, y_train, _ = train_test_split(X, y, test_size=test_split_size)
-
-#     TBlog_path = ('./TrainedModels/logs/' +
-#                   name+'-'+datetime.datetime.now()
-#                   .strftime('%Y-%m-%d_%H-%M-%S'))
-#     Model_save_path = ('./TrainedModels/model/'+name+'/'+'/' +
-#                        datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') +
-#                        '/')
-#     os.makedirs(Model_save_path)
-
-#     # Call backs
-#     checkpoint = callbacks.ModelCheckpoint(
-#         filepath=Model_save_path+name+'.{epoch}-{val_loss:.3f}.hdf5',
-#         monitor='val_loss', verbose=0, save_best_only=True,
-#         save_weights_only=False, mode='min', period=1)
-
-#     reduceLR = callbacks.ReduceLROnPlateau(
-#         monitor='val_loss', factor=0.1, patience=10, verbose=0,
-#         mode='auto', min_delta=0.0001, cooldown=0, min_lr=0)
-
-#     EarlyStop = callbacks.EarlyStopping(
-#         monitor='loss', min_delta=0, patience=20, verbose=0,
-#         mode='auto', baseline=None)
-
-#     tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
-
-#     all_callbacks = [tensorboard, checkpoint, reduceLR, EarlyStop]
-#     # all_callbacks = [tensorboard]
-
-#     # Building model
-#     model = Sequential()
-#     model.add(Conv2D(64, (2, 1), data_format="channels_first",
-#               input_shape=(X.shape[1], X.shape[2], X.shape[3]),
-#               strides=[2, 1]))
-#     model.add(BatchNormalization())
-#     model.add(Activation('relu'))
-
-#     model.add(Conv2D(32, (2, 1), data_format="channels_first",
-#               strides=[2, 1]))
-#     model.add(BatchNormalization())
-#     model.add(Activation('relu'))
-
-#     model.add(Conv2D(16, (2, 1), data_format="channels_first",
-#               strides=[2, 1]))
-#     model.add(BatchNormalization())
-#     model.add(Activation('relu'))
-
-#     # model.add(Conv2D(5, (3, 2), data_format="channels_first",
-#     #           strides=[2, 1]))
-#     # model.add(BatchNormalization())
-#     # model.add(Activation('relu'))
-
-#     # model.add(Conv2D(5, (3, 2), data_format="channels_first",
-#     #           strides=[2, 1]))
-#     # model.add(BatchNormalization())
-#     # model.add(Activation('relu'))
-
-#     model.add(MaxPooling2D(pool_size=(2, 2)))
-#     model.add(Flatten())
-#     # model.add(Dense(512, activation='relu'))
-#     # model.add(Dense(512, activation='relu'))
-#     # model.add(Dense(512, activation='relu'))
-#     model.add(Dense(2000, activation='relu'))
-#     model.add(Dropout(params['dropout']))
-#     model.add(Dense(800, activation='relu'))
-#     model.add(Dropout(params['dropout']))
-#     model.add(Dense(500, activation='relu'))
-#     model.add(Dense(100, activation='relu'))
-#     model.add(Dense(20, activation='relu'))
-#     model.add(Dense(3, activation='softmax'))
-#     model.summary()
-#     # Training
-#     if 4 < 2:  # no or single GPU systems
-#         model.compile(loss=params['losses'], optimizer=params['optimizer'], metrics=['accuracy'])
-#         history = model.fit(X_train, y_train, batch_size=params['batch_size'], epochs=100,
-#                   verbose=0, callbacks=all_callbacks,
-#                   validation_split=0.1, shuffle=shuffle)
-#     else:  # prallelized on multiple GPUs
-#         from keras.utils import multi_gpu_model
-#         parallel_model = multi_gpu_model(model, gpus=4)
-#         parallel_model.compile(loss=params['losses'], optimizer=params['optimizer'], metrics=['accuracy'])
-#         history = parallel_model.fit(X_train, y_train, batch_size=params['batch_size'],
-#                            epochs=100, verbose=0,
-#                            callbacks=all_callbacks,
-#                            validation_split=0.1, shuffle=shuffle)
-#     model.save(Model_save_path+name+'.final.hdf5')
-#     return history, model
-
-# p = {'lr': (0.5, 5, 10),
-#      'first_neuron':[4, 8, 16, 32, 64],
-#      'hidden_layers':[0, 1, 2],
-#      'batch_size': (2, 30, 10),
-#      'epochs': [150],
-#      'dropout': (0, 0.5, 5),
-#      'weight_regulizer':[None],
-#      'emb_output_dims': [None],
-#      'shape':['brick','long_funnel'],
-#      'optimizer': ['adam', 'Nadam', 'RMSprop'],
-#      'losses': ['logcosh', 'categorical_crossentropy'],
-#      'activation':['relu', 'elu'],
-#      'last_activation': ['sigmoid']}
-# y = np.load('y.npy')
-# X = np.abs(np.load('stft-2D-100.npy'))
-# print('start')
-# t = ta.Scan(x=X,
-#             y=y,
-#             model=CNN2D_grid,
-#             grid_downsample=0.01, 
-#             params=p,
-#             dataset_name='EEG',
-#             experiment_no='1')
-
 
 
 # Read data
@@ -183,11 +66,39 @@ y = np.load('y.npy')
 # channels all
 X = np.load('EEG.npy')
 X = reshape_1D_conv(X)
-CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-allch', num_GPU=num_GPU,
-          optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-          metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
+# CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-allch', num_GPU=num_GPU,
+#           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+#           metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
+def baseline_model():
+    # create model
+    model = Sequential()
+    model.add(Conv1D(filters=1, kernel_size=5, strides=10,
+                     input_shape=(X.shape[1], 1), kernel_initializer='uniform',
+                     name='1-Conv1D'))
+    model.add(BatchNormalization())
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5, name='2-dropout'))
+    model.add(MaxPooling1D(2, name='3-maxpooling'))
+    model.add(Flatten())
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(3, activation='softmax'))
+    model.summary()
+
+    from keras.utils import multi_gpu_model
+    parallel_model = multi_gpu_model(model, gpus=4)
+    parallel_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return parallel_model
+
+estimator = KerasClassifier(build_fn=baseline_model, epochs=1, batch_size=32, verbose=1)
+
+kfold = KFold(n_splits=5, shuffle=True)
+results = cross_val_score(estimator, X, y, cv=kfold)
+print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 # channels 7:21
 X = np.load('EEG.npy')
 X = reshape_1D_conv(X[:, :, 7:21])
