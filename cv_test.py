@@ -66,7 +66,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("Time all channels")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -78,7 +78,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("Time channels 7:21")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -89,7 +89,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-50 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -99,7 +99,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-100 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -109,7 +109,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-150 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -123,7 +123,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-50 log 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -134,7 +134,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-100 log 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -145,7 +145,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-150 log 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -157,7 +157,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-50 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -166,7 +166,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-100 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -175,7 +175,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-150 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -186,7 +186,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-50 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -196,7 +196,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-100 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -206,7 +206,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("STFT-150 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -219,7 +219,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 50 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -229,7 +229,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 100 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -239,7 +239,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 150 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -251,7 +251,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 50 log 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -262,7 +262,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 100 log 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -273,7 +273,7 @@ estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 150 log 1D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -284,7 +284,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 50 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -293,7 +293,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 100 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -302,7 +302,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 150 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -313,7 +313,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 50 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -323,7 +323,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 100 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
@@ -333,7 +333,7 @@ estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
                             verbose=0)
 
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, X, y, cv=kfold)
+results = cross_val_score(estimator, X, y, cv=kfold)
 print("MT 150 log 2D")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
