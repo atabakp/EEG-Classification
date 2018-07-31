@@ -62,279 +62,123 @@ y = np.load('y.npy')
 # channels all
 X = np.load('EEG.npy')
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("Time all channels")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
-
+print("start")
+CV.CNN1D(X, y, epochs=100, verbose=0, name="TimeAllCH", folds=5)
 
 # channels 7:21
 X = np.load('EEG.npy')
 X = reshape_1D_conv(X[:, :, 7:21])
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("Time channels 7:21")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="Time7:21CH", folds=5)
 
 # Short Time Fourier 1D
 X = np.abs(np.load('stft-1D-50.npy'))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-50 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="STFT-50 1D", folds=5)
 
 X = np.abs(np.load('stft-1D-100.npy'))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-100 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="STFT-100 1D", folds=5)
 
 X = np.abs(np.load('stft-1D-150.npy'))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-150 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="STFT-150 1D", folds=5)
 
 
 # Short Time Fourier 1D with log
-print("Short Time Fourier 1D with log")
 X = np.abs(np.load('stft-1D-50.npy'))
 X = np.log10(X.clip(min=000000.1))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-50 log 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="STFT-50 log 1D", folds=5)
 
 X = np.abs(np.load('stft-1D-100.npy'))
 X = np.log10(X.clip(min=000000.1))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-100 log 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="STFT-100 log 1D", folds=5)
 
 X = np.abs(np.load('stft-1D-150.npy'))
 X = np.log10(X.clip(min=000000.1))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-150 log 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="STFT-150 log 1D", folds=5)
 
 
 # Short Time Fourier 2D
 print("Short Time Fourier 2D")
 X = np.abs(np.load('stft-2D-50.npy'))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-50 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="STFT-50 log 2D", folds=5)
 
 X = np.abs(np.load('stft-2D-100.npy'))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-100 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="STFT-100 log 2D", folds=5)
 
 X = np.abs(np.load('stft-2D-100.npy'))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
+CV.CNN2D(X, y, epochs=100, verbose=0, name="STFT-150 log 2D", folds=5)
 
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-150 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
 # STFT 2D with Log Transformation
 X = np.abs(np.load('stft-2D-50.npy'))
 X = np.log10(X.clip(min=000000.1))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-50 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="STFT-50 log 2D", folds=5)
 
 X = np.abs(np.load('stft-2D-100.npy'))
 X = np.log10(X.clip(min=000000.1))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-100 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="STFT-100 log 2D", folds=5)
 
 X = np.abs(np.load('stft-2D-150.npy'))
 X = np.log10(X.clip(min=000000.1))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("STFT-150 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="STFT-150 log 2D", folds=5)
 
 
 # Multitaper 1D
 print("Multitaper 1D")
 X = np.abs(np.load('mt-1D-50.npy'))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 50 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="MT 50 1D", folds=5)
 
 X = np.abs(np.load('mt-1D-100.npy'))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 100 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="MT 100 1D", folds=5)
 
 X = np.abs(np.load('mt-1D-150.npy'))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
+CV.CNN1D(X, y, epochs=100, verbose=0, name="MT 150 1D", folds=5)
 
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 150 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
 # MultiTaper 1D with log
 X = np.abs(np.load('mt-1D-50.npy'))
 X = np.log10(X.clip(min=000000.1))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 50 log 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="MT 50 log 1D", folds=5)
 
 X = np.abs(np.load('mt-1D-100.npy'))
 X = np.log10(X.clip(min=000000.1))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 100 log 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="MT 100 log 1D", folds=5)
 
 X = np.abs(np.load('mt-1D-150.npy'))
 X = np.log10(X.clip(min=000000.1))
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 150 log 1D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN1D(X, y, epochs=100, verbose=0, name="MT 150 log 1D", folds=5)
 
 
 # Multitaper 2D
 X = np.abs(np.load('mt-2D-50.npy'))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 50 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="MT 50 2D", folds=5)
 
 X = np.abs(np.load('mt-2D-100.npy'))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 100 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="MT 100 2D", folds=5)
 
 X = np.abs(np.load('mt-2D-150.npy'))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
+CV.CNN2D(X, y, epochs=100, verbose=0, name="MT 150 2D", folds=5)
 
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 150 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
 # Multitaper 2D with Log
 X = np.abs(np.load('stft-2D-50.npy'))
 X = np.log10(X.clip(min=000000.1))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 50 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="MT 50 log 2D", folds=5)
 
 X = np.abs(np.load('stft-2D-100.npy'))
 X = np.log10(X.clip(min=000000.1))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 100 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+CV.CNN2D(X, y, epochs=100, verbose=0, name="MT 100 log 2D", folds=5)
 
 X = np.abs(np.load('stft-2D-150.npy'))
 X = np.log10(X.clip(min=000000.1))
-estimator = KerasClassifier(build_fn=CV.CNN2D, epochs=150, batch_size=10,
-                            verbose=0)
-
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("MT 150 log 2D")
-print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
-
-
+CV.CNN2D(X, y, epochs=100, verbose=0, name="MT 150 log 2D", folds=5)
