@@ -18,6 +18,7 @@ import keras
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import KFold
 
 num_GPU = 4
 epochs = 100
@@ -60,13 +61,15 @@ y = np.load('y.npy')
 # Print("Done!!!!!!!!!!!!!!!!!")
 
 # channels all
+print("Time all channels")
 X = np.load('EEG.npy')
 X = reshape_1D_conv(X)
-estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=150, batch_size=10,
-                            verbose=0)
+estimator = KerasClassifier(build_fn=CV.CNN1D, epochs=3, batch_size=10,
+                            verbose=1)
 
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
+kfold = KFold(n_splits=2, shuffle=True)
 results = cross_val_score(estimator, X, y, cv=kfold)
+print(estimator.predict_proba(X))
 print("Time all channels")
 print("Mean (STD): %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 

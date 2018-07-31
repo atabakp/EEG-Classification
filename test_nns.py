@@ -56,12 +56,12 @@ y = np.load('y.npy')
 
 
 # LSTM
-# X = np.load('EEG.npy')
-# X = reshape_1D_conv(X)
-# CNN.LSTMNN(X, y, epochs=5, name='LSTM', num_GPU=num_GPU,
-#            optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-#            metrics=['accuracy'], test_split_size=0.1, verbose=1)
-# Print("Done!!!!!!!!!!!!!!!!!")
+X = np.load('EEG.npy')
+X = reshape_1D_conv(X)
+CNN.LSTMNN(X, y, epochs=5, name='LSTM', num_GPU=num_GPU,
+           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+           metrics=['accuracy'], test_split_size=0.3, verbose=1)
+Print("Done!!!!!!!!!!!!!!!!!")
 
 # channels all
 X = np.load('EEG.npy')
@@ -94,11 +94,12 @@ def baseline_model():
     parallel_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     return parallel_model
 
-estimator = KerasClassifier(build_fn=baseline_model, epochs=1, batch_size=32, verbose=1)
+estimator = KerasClassifier(build_fn=baseline_model, epochs=50, batch_size=32, verbose=0)
 
 kfold = KFold(n_splits=5, shuffle=True)
 results = cross_val_score(estimator, X, y, cv=kfold)
 print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+exit()
 # channels 7:21
 X = np.load('EEG.npy')
 X = reshape_1D_conv(X[:, :, 7:21])

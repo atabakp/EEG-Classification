@@ -12,13 +12,14 @@ import os
 from keras.models import Model
 from keras import layers
 import keras
+from keras.utils import multi_gpu_model
 
 
 def CNN1D(optimizer='adam'):
 
     model = Sequential()
     model.add(Conv1D(filters=1, kernel_size=5, strides=10,
-                     input_shape=(X.shape[1], 1), kernel_initializer='uniform',
+                     input_shape=(86432, 1), kernel_initializer='uniform',
                      name='1-Conv1D'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
