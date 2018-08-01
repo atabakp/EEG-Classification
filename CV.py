@@ -16,48 +16,64 @@ import csv
 from sklearn.model_selection import StratifiedKFold
 from keras.utils import to_categorical
 from keras.utils import multi_gpu_model
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
 
 
 def CNN1D(X, y, epochs, name, folds=10, verbose=1, batch_size=32,
           optimizer='adam', loss='categorical_crossentropy',
           metrics=['accuracy']):
 
+
     y = np.argmax(y, axis=1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
     kfold = StratifiedKFold(n_splits=folds, shuffle=True)
     cvscores = []
     i = 1
-    for train, val in kfold.split(X, y):
+    for train, val in kfold.split(X_train, y_train):
         model = Sequential()
-        model.add(Conv1D(filters=1, kernel_size=5, strides=10,
-                         input_shape=(X.shape[1], 1),
-                         kernel_initializer='uniform',
-                         name='1-Conv1D'))
-        model.add(BatchNormalization())
-        model.add(Activation('relu'))
-        model.add(Dropout(0.5, name='2-dropout'))
-        model.add(MaxPooling1D(2, name='3-maxpooling'))
-        model.add(Flatten())
+        # model.add(Conv1D(filters=1, kernel_size=5, strides=10,
+        #                  input_shape=(X.shape[1], 1),
+        #                  kernel_initializer='uniform',
+        #                  name='1-Conv1D'))
+        # model.add(BatchNormalization())
+        # model.add(Activation('relu'))
+        # #model.add(Dropout(0.5, name='2-dropout'))
+        # model.add(MaxPooling1D(2, name='3-maxpooling'))
+        # model.add(Flatten())
+        model.add(Dense(
+        input_dim=X.shape[1], 
+        units=512,
+        activation="relu"
+        ))
         model.add(Dense(512, activation='relu'))
-        model.add(Dropout(0.5))
+        #model.add(Dropout(0.5))
         model.add(Dense(512, activation='relu'))
-        model.add(Dropout(0.5))
+        #model.add(Dropout(0.5))
         model.add(Dense(3, activation='softmax'))
 
-        y_tr = to_categorical(y[train])
+        y_tr = to_categorical(y_train[train])
 
         parallel_model = multi_gpu_model(model, gpus=4)
         parallel_model.compile(loss=loss, optimizer=optimizer,
                                metrics=metrics)
-        parallel_model.fit(X[train], y_tr, epochs=epochs,
+        parallel_model.fit(X_train[train], y_tr, epochs=epochs,
                            batch_size=batch_size, verbose=verbose)
-        y_val = to_categorical(y[val])
-        scores = parallel_model.evaluate(X[val], y_val, verbose=verbose)
+        y_val = to_categorical(y_train[val])
+        scores = parallel_model.evaluate(X_train[val], y_val, verbose=verbose)
         print("fold %d: %s: %.2f%%" % (i, parallel_model.metrics_names[1],
                                        scores[1]*100))
         i = i+1
         cvscores.append(scores[1] * 100)
     np.savetxt(name + ".csv", cvscores, delimiter=",")
-    print(name + " %.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
+    y_pred = np.argmax(parallel_model.predict(X_test), axis=1)
+    y_test = to_categorical(y_test)
+    y_true = np.argmax(y_test, axis=1)
+    cm = confusion_matrix(y_true, y_pred)
+    print(cm)
+    print("ACC on test set: %.2f", np.trace(cm)/np.sum(cm)*100)
+    print(name + " %.2f%% (+/- %.2f%%)" % (np.mean(cvscores), 
+                                           np.std(cvscores)))
 
 
 def CNN2D(X, y, epochs, name, folds=10, verbose=1, batch_size=32,

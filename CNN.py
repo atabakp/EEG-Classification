@@ -375,7 +375,6 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
     # Building model
     model = Sequential()
-    model = Sequential()
 
     # model.add(Conv2D(64, (2, 1), data_format="channels_first",
     #           input_shape=(X.shape[1], X.shape[2], X.shape[3]),
@@ -388,7 +387,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     #                  kernel_initializer='uniform',
     #                  name='1-Conv1D'))
     # model.add(LSTM(64,  return_sequences=False))
-    model.add(LSTM(64,  return_sequences=False,
+    model.add(LSTM(12,  return_sequences=False,
               input_shape=(X.shape[1], X.shape[2])))
     model.add(Dropout(0.3))
     # model.add(LSTM(32))
@@ -399,7 +398,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
         model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         model.fit(X, y, batch_size=batch_size, epochs=epochs,
                   verbose=verbose, callbacks=all_callbacks,
-                  validation_split=0.1)
+                  validation_split=0.3)
     else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
         parallel_model = multi_gpu_model(model, gpus=num_GPU)
@@ -407,7 +406,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
         parallel_model.fit(X, y, batch_size=batch_size*num_GPU,
                            epochs=epochs, verbose=verbose,
                            callbacks=all_callbacks,
-                           validation_split=0.1)
+                           validation_split=0.3)
     model.save(Model_save_path+name+'.final.hdf5')
     model_json = model.to_json()
     with open(Model_save_path+name+'.final.json', "w") as json_file:

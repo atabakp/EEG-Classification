@@ -13,14 +13,18 @@ from keras import callbacks
 import datetime
 import os
 from keras.models import Model
+from keras.models import load_model
 from keras import layers
 import keras
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import StratifiedKFold
+from keras.utils import multi_gpu_model
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
 
-k = 5
-epochs = 100
+k = 3
+epochs = 80
 verbose = 0
 #  0 | 1 | 2| 3| 4| 5| 6| 7 | 8 | 9 | 10|11|12|13|14|15| 16| 17| 18| 19| 20| 21 |22|23|24|25|26| 27|28|29|30| 31 |
 # Fp1|Fp2|F7|F3|Fz|F4|F8|FC5|FC1|FC2|FC6|T7|C3|Cz|C4|T8|TP9|CP5|CP1|CP2|CP6|TP10|P7|P3|Pz|P4|P8|PO9|O1|Oz|O2|PO10|
@@ -29,9 +33,9 @@ verbose = 0
 def reshape_1D_conv(X):
     X_rashaped = np.array([X[i, :, :].flatten()
                            for i in range(X.shape[0])])  # concatenate
-    X_rashaped = X_rashaped.reshape(X_rashaped.shape[0],
-                                    X_rashaped.shape[1],
-                                    1)  # add 3rd dimension
+    # X_rashaped = X_rashaped.reshape(X_rashaped.shape[0],
+    #                                 X_rashaped.shape[1],
+    #                                 1)  # add 3rd dimension
     return X_rashaped
 
 
@@ -59,11 +63,22 @@ y = np.load('y.npy')
 #            metrics=['accuracy'], test_split_size=0.1, verbose=1)
 # Print("Done!!!!!!!!!!!!!!!!!")
 
+
+
+X = np.load('EEG.npy')
+X = reshape_1D_conv(X)
+
+print("start")
+CV.CNN1D(X, y, epochs=50, verbose=1, name="TimeAllCH", folds=2)
+CV.CNN1D(X, y, epochs=50, verbose=1, name="TimeAllCH", folds=2, loss='binary_crossentropy')
+
+
+'''
 # channels all
 X = np.load('EEG.npy')
 X = reshape_1D_conv(X)
 print("start")
-CV.CNN1D(X, y, epochs=epochs, verbose=verbose, name="TimeAllCH", folds=k)
+CV.CNN1D(X, y, epochs=epochs, verbose=verbose, name="TimeAllCH", folds=k, optimizer='rmsprop')
 
 # channels 7:21
 X = np.load('EEG.npy')
@@ -182,3 +197,4 @@ CV.CNN2D(X, y, epochs=epochs, verbose=verbose, name="MT 100 log 2D", folds=k)
 X = np.abs(np.load('stft-2D-150.npy'))
 X = np.log10(X.clip(min=000000.1))
 CV.CNN2D(X, y, epochs=epochs, verbose=verbose, name="MT 150 log 2D", folds=k)
+'''
