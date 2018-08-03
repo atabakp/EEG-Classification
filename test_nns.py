@@ -56,52 +56,31 @@ y = np.load('y.npy')
 
 
 # LSTM
-X = np.load('EEG.npy')
-X = reshape_1D_conv(X)
-CNN.LSTMNN(X, y, epochs=5, name='LSTM', num_GPU=num_GPU,
-           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-           metrics=['accuracy'], test_split_size=0.3, verbose=1)
-Print("Done!!!!!!!!!!!!!!!!!")
+# X = np.load('EEG.npy')
+# X = reshape_1D_conv(X)
+# print(X.shape)
+# CNN.LSTMNN(X, y, epochs=5, name='LSTM', num_GPU=num_GPU,
+#            optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+#            metrics=['accuracy'], test_split_size=0.3, verbose=1)
+# Print("Done!!!!!!!!!!!!!!!!!")
+
+
 
 # channels all
 X = np.load('EEG.npy')
+####
+X = np.load('./person/P1X.npy')
+y = np.load('./person/P1y.npy')
+####
 X = reshape_1D_conv(X)
-# CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-allch', num_GPU=num_GPU,
-#           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-#           metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
+CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-allch', num_GPU=num_GPU,
+          optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+          metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
-def baseline_model():
-    # create model
-    model = Sequential()
-    model.add(Conv1D(filters=1, kernel_size=5, strides=10,
-                     input_shape=(X.shape[1], 1), kernel_initializer='uniform',
-                     name='1-Conv1D'))
-    model.add(BatchNormalization())
-    model.add(Activation('relu'))
-    model.add(Dropout(0.5, name='2-dropout'))
-    model.add(MaxPooling1D(2, name='3-maxpooling'))
-    model.add(Flatten())
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(512, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(3, activation='softmax'))
-    model.summary()
-
-    from keras.utils import multi_gpu_model
-    parallel_model = multi_gpu_model(model, gpus=4)
-    parallel_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    return parallel_model
-
-estimator = KerasClassifier(build_fn=baseline_model, epochs=50, batch_size=32, verbose=0)
-
-kfold = KFold(n_splits=5, shuffle=True)
-results = cross_val_score(estimator, X, y, cv=kfold)
-print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
-exit()
+'''
 # channels 7:21
-X = np.load('EEG.npy')
+#X = np.load('EEG.npy')
 X = reshape_1D_conv(X[:, :, 7:21])
 CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-ch0:22', num_GPU=num_GPU,
           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
@@ -151,24 +130,27 @@ model = CNN.CNN1D(X, y, epochs=epochs, name='stft-1D-150-log', num_GPU=num_GPU,
                   optimizer='adam', batch_size=32, loss='categorical_crossentropy',
                   metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
-
+'''
+'''
 # Short Time Fourier 2D
 print("Short Time Fourier 2D")
 X = np.abs(np.load('stft-2D-50.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-50', num_GPU=num_GPU,
-                  optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
+                  optimizer='rmsprop', batch_size=32, loss='categorical_crossentropy',
+                  metrics=['accuracy'], test_split_size=0.1, verbose=verbose,
+                  shuffle = True)
 
 X = np.abs(np.load('stft-2D-100.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-100', num_GPU=num_GPU,
-                  optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+                  optimizer='rmsprop', batch_size=32, loss='categorical_crossentropy',
                   metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
-X = np.abs(np.load('stft-2D-100.npy'))
+X = np.abs(np.load('stft-2D-150.npy'))
 model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-150', num_GPU=num_GPU,
-                  optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+                  optimizer='rmsprop', batch_size=32, loss='categorical_crossentropy',
                   metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
-
+'''
+'''
 # STFT 2D with Log Transformation
 X = np.abs(np.load('stft-2D-50.npy'))
 X = np.log10(X.clip(min=000000.1))
@@ -280,3 +262,4 @@ model = CNN.CNN2D(X, y, epochs=epochs, name='stft-2D-150-log', num_GPU=num_GPU,
 # model = CNN.CNN2D(X, y, epochs=epochs, name='cwt-2D-5', num_GPU=num_GPU,
 #                   optimizer='adam', batch_size=32, loss='categorical_crossentropy',
 #                   metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
+'''

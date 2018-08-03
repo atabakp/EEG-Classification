@@ -32,24 +32,18 @@ def CNN1D(X, y, epochs, name, folds=10, verbose=1, batch_size=32,
     i = 1
     for train, val in kfold.split(X_train, y_train):
         model = Sequential()
-        # model.add(Conv1D(filters=1, kernel_size=5, strides=10,
-        #                  input_shape=(X.shape[1], 1),
-        #                  kernel_initializer='uniform',
-        #                  name='1-Conv1D'))
-        # model.add(BatchNormalization())
-        # model.add(Activation('relu'))
-        # #model.add(Dropout(0.5, name='2-dropout'))
-        # model.add(MaxPooling1D(2, name='3-maxpooling'))
-        # model.add(Flatten())
-        model.add(Dense(
-        input_dim=X.shape[1], 
-        units=512,
-        activation="relu"
-        ))
+        model.add(Conv1D(filters=1, kernel_size=5, strides=10,
+                        input_shape=(X.shape[1], 1), kernel_initializer='uniform',
+                        name='1-Conv1D'))
+        model.add(BatchNormalization())
+        model.add(Activation('relu'))
+        model.add(Dropout(0.5, name='2-dropout'))
+        model.add(MaxPooling1D(2, name='3-maxpooling'))
+        model.add(Flatten())
         model.add(Dense(512, activation='relu'))
-        #model.add(Dropout(0.5))
+        model.add(Dropout(0.5))
         model.add(Dense(512, activation='relu'))
-        #model.add(Dropout(0.5))
+        model.add(Dropout(0.5))
         model.add(Dense(3, activation='softmax'))
 
         y_tr = to_categorical(y_train[train])

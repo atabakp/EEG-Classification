@@ -33,9 +33,9 @@ verbose = 0
 def reshape_1D_conv(X):
     X_rashaped = np.array([X[i, :, :].flatten()
                            for i in range(X.shape[0])])  # concatenate
-    # X_rashaped = X_rashaped.reshape(X_rashaped.shape[0],
-    #                                 X_rashaped.shape[1],
-    #                                 1)  # add 3rd dimension
+    X_rashaped = X_rashaped.reshape(X_rashaped.shape[0],
+                                    X_rashaped.shape[1],
+                                    1)  # add 3rd dimension
     return X_rashaped
 
 
@@ -66,11 +66,14 @@ y = np.load('y.npy')
 
 
 X = np.load('EEG.npy')
+###3
+X = np.load('./person/P1X.npy')
+y = np.load('./person/P1y.npy')
+####
 X = reshape_1D_conv(X)
-
+print(X.shape)
 print("start")
-CV.CNN1D(X, y, epochs=50, verbose=1, name="TimeAllCH", folds=2)
-CV.CNN1D(X, y, epochs=50, verbose=1, name="TimeAllCH", folds=2, loss='binary_crossentropy')
+CV.CNN1D(X, y, epochs=50, verbose=2, name="TimeAllCH", folds=5, batch_size = 20)
 
 
 '''

@@ -148,10 +148,10 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
     model.add(Flatten())
     # model.add(Dense(512, activation='relu'))
     # model.add(Dense(512, activation='relu'))
-    # model.add(Dense(512, activation='relu'))
     model.add(Dense(2000, activation='relu'))
+    model.add(Dense(1000, activation='relu'))
     # model.add(Dropout(0.5))
-    model.add(Dense(800, activation='relu'))
+    model.add(Dense(512, activation='relu'))
     # model.add(Dropout(0.5))
     model.add(Dense(500, activation='relu'))
     model.add(Dense(100, activation='relu'))
@@ -387,7 +387,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     #                  kernel_initializer='uniform',
     #                  name='1-Conv1D'))
     # model.add(LSTM(64,  return_sequences=False))
-    model.add(LSTM(12,  return_sequences=False,
+    model.add(LSTM(64,  return_sequences=False,
               input_shape=(X.shape[1], X.shape[2])))
     model.add(Dropout(0.3))
     # model.add(LSTM(32))
