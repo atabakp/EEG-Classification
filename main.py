@@ -20,7 +20,7 @@ for i in range(12):
     multitaper(EEG, npts=170, fw=3, number_of_tapers=5, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100')
     multitaper_2D(EEG, npts=170, fw=3, number_of_tapers=5, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'mt-2D-100')
 
-
+Print("Done!!!!!!!")
 
 
 
