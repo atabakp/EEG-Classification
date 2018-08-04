@@ -15,12 +15,12 @@ import feature_extracting
 
 for i in range(12):
     X = np.load('./person/P'+str(i+1)+'X.npy')
-    short_time_ft(EEG, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100')
-    short_time_ft_2D(EEG, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'stft-2D-100')
-    multitaper(EEG, npts=170, fw=3, number_of_tapers=5, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100')
-    multitaper_2D(EEG, npts=170, fw=3, number_of_tapers=5, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'mt-2D-100')
+    feature_extracting.short_time_ft(X, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100')
+    feature_extracting.short_time_ft_2D(X, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'stft-2D-100')
+    feature_extracting.multitaper(X, npts=170, fw=3, number_of_tapers=5, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100')
+    feature_extracting.multitaper_2D(X, npts=170, fw=3, number_of_tapers=5, fs=100, filename='./person/P'+str(i+1)+'/P'+str(i+1)+'mt-2D-100')
 
-Print("Done!!!!!!!")
+print("Done!!!!!!!")
 
 
 

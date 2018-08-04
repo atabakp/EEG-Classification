@@ -57,14 +57,20 @@ y = np.load('y.npy')
 
 # LSTM
 # X = np.load('EEG.npy')
-# X = reshape_1D_conv(X)
 # print(X.shape)
-# CNN.LSTMNN(X, y, epochs=5, name='LSTM', num_GPU=num_GPU,
+# CNN.LSTMNN(X, y, epochs=10, name='LSTM', num_GPU=num_GPU,
 #            optimizer='adam', batch_size=32, loss='categorical_crossentropy',
 #            metrics=['accuracy'], test_split_size=0.3, verbose=1)
-# Print("Done!!!!!!!!!!!!!!!!!")
 
 
+# LSTM fft
+X = np.abs(np.load('stft-1D-100.npy'))
+print(X.shape)
+CNN.LSTMNN(X, y, epochs=50, name='LSTM', num_GPU=num_GPU,
+           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+           metrics=['accuracy'], test_split_size=0.3, verbose=1)
+print("Done!!!!!!!!!!!!!!!!!")
+exit()
 
 # channels all
 X = np.load('EEG.npy')

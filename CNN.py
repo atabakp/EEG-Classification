@@ -16,7 +16,7 @@ import keras
 
 def CNN1D(X, y, epochs, name, train=True, test_split_size=0.1, verbose=1,
           num_GPU=0, batch_size=32, optimizer='adam',
-          loss='categorical_crossentropy', metrics=['accuracy']):
+          loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -67,7 +67,7 @@ def CNN1D(X, y, epochs, name, train=True, test_split_size=0.1, verbose=1,
         if train:
             model.fit(X, y, batch_size=batch_size, epochs=epochs,
                       verbose=verbose, callbacks=all_callbacks,
-                      validation_split=0.1)
+                      validation_split=0.1, shuffle=shuffle)
     else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
         parallel_model = multi_gpu_model(model, gpus=num_GPU)
@@ -76,7 +76,7 @@ def CNN1D(X, y, epochs, name, train=True, test_split_size=0.1, verbose=1,
             parallel_model.fit(X, y, batch_size=batch_size*num_GPU,
                                epochs=epochs, verbose=verbose,
                                callbacks=all_callbacks,
-                               validation_split=0.1)
+                               validation_split=0.1, shuffle=shuffle)
     model.save(Model_save_path+name+'.final.hdf5')
     model_json = model.to_json()
     with open(Model_save_path+name+'.final.json', "w") as json_file:
@@ -86,8 +86,7 @@ def CNN1D(X, y, epochs, name, train=True, test_split_size=0.1, verbose=1,
 
 def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
           num_GPU=0, batch_size=32, optimizer='adam',
-          loss='categorical_crossentropy', metrics=['accuracy'],
-          shuffle=False):
+          loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -178,7 +177,7 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='categorical_crossentropy', metrics=['accuracy']):
+             loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -239,7 +238,7 @@ def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
         model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         model.fit(X, y, batch_size=batch_size, epochs=epochs,
                   verbose=verbose, callbacks=all_callbacks,
-                  validation_split=0.1)
+                  validation_split=0.1, shuffle=shuffle)
     else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
         parallel_model = multi_gpu_model(model, gpus=num_GPU)
@@ -247,15 +246,14 @@ def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
         parallel_model.fit(X, y, batch_size=batch_size*num_GPU,
                            epochs=epochs, verbose=verbose,
                            callbacks=all_callbacks,
-                           validation_split=0.1)
+                           validation_split=0.1, shuffle=shuffle)
     model.save(Model_save_path+name+'.final.hdf5')
     return model
 
 
 def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='categorical_crossentropy', metrics=['accuracy'],
-             shuffle=False):
+             loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -344,7 +342,7 @@ def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
            num_GPU=0, batch_size=32, optimizer='adam',
-           loss='categorical_crossentropy', metrics=['accuracy']):
+           loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -387,10 +385,10 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     #                  kernel_initializer='uniform',
     #                  name='1-Conv1D'))
     # model.add(LSTM(64,  return_sequences=False))
-    model.add(LSTM(64,  return_sequences=False,
+    model.add(LSTM(128,  return_sequences=True,
               input_shape=(X.shape[1], X.shape[2])))
-    model.add(Dropout(0.3))
-    # model.add(LSTM(32))
+    #model.add(Dropout(0.3))
+    model.add(LSTM(32))
     model.add(Dense(3, activation='softmax'))
     model.summary()
     # Training
@@ -398,7 +396,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
         model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         model.fit(X, y, batch_size=batch_size, epochs=epochs,
                   verbose=verbose, callbacks=all_callbacks,
-                  validation_split=0.3)
+                  validation_split=0.1)
     else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
         parallel_model = multi_gpu_model(model, gpus=num_GPU)
@@ -406,7 +404,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
         parallel_model.fit(X, y, batch_size=batch_size*num_GPU,
                            epochs=epochs, verbose=verbose,
                            callbacks=all_callbacks,
-                           validation_split=0.3)
+                           validation_split=0.1)
     model.save(Model_save_path+name+'.final.hdf5')
     model_json = model.to_json()
     with open(Model_save_path+name+'.final.json', "w") as json_file:
@@ -416,7 +414,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def ConvLSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='categorical_crossentropy', metrics=['accuracy']):
+             loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -459,7 +457,7 @@ def ConvLSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
         model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         model.fit(X, y, batch_size=batch_size, epochs=epochs,
                   verbose=verbose, callbacks=all_callbacks,
-                  validation_split=0.1)
+                  validation_split=0.1, shuffle=shuffle)
     else:  # prallelized on multiple GPUs
         from keras.utils import multi_gpu_model
         parallel_model = multi_gpu_model(model, gpus=num_GPU)
@@ -467,7 +465,7 @@ def ConvLSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
         parallel_model.fit(X, y, batch_size=batch_size*num_GPU,
                            epochs=epochs, verbose=verbose,
                            callbacks=all_callbacks,
-                           validation_split=0.1)
+                           validation_split=0.1, shuffle=shuffle)
     model.save(Model_save_path+name+'.final.hdf5')
     model_json = model.to_json()
     with open(Model_save_path+name+'.final.json', "w") as json_file:
