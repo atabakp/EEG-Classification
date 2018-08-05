@@ -177,7 +177,8 @@ def CNN2D(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
+             loss='categorical_crossentropy', metrics=['accuracy'],
+             shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -253,7 +254,8 @@ def Dense_NN(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
+             loss='categorical_crossentropy', metrics=['accuracy'],
+             shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -342,7 +344,8 @@ def CNN2D_32(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
            num_GPU=0, batch_size=32, optimizer='adam',
-           loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
+           loss='categorical_crossentropy', metrics=['accuracy'],
+           shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
@@ -387,7 +390,7 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     # model.add(LSTM(64,  return_sequences=False))
     model.add(LSTM(128,  return_sequences=True,
               input_shape=(X.shape[1], X.shape[2])))
-    #model.add(Dropout(0.3))
+    # model.add(Dropout(0.3))
     model.add(LSTM(32))
     model.add(Dense(3, activation='softmax'))
     model.summary()
@@ -414,7 +417,8 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
 
 def ConvLSTM(X, y, epochs, name, test_split_size=0.1, verbose=1,
              num_GPU=0, batch_size=32, optimizer='adam',
-             loss='categorical_crossentropy', metrics=['accuracy'], shuffle=True):
+             loss='categorical_crossentropy', metrics=['accuracy'],
+             shuffle=True):
 
     TBlog_path = ('./TrainedModels/logs/' +
                   name+'-'+datetime.datetime.now()
