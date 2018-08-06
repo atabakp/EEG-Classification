@@ -23,10 +23,12 @@ from sklearn.model_selection import KFold
 from sklearn.preprocessing import LabelEncoder
 from sklearn.pipeline import Pipeline
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 num_GPU = 4
-epochs = 100
-verbose = 1
+epochs = 30
+verbose = 0
 
 
 def reshape_1D_conv(X):
@@ -43,86 +45,117 @@ def reshape_2D_conv(X):
     return X_reshaped
 
 
+i = 0
+X = np.load('EEG.npy')
+print(X.shape)
+y = np.load('y.npy')
+X = reshape_2D_conv(X)
+print(X.shape)
+CV.newCNN(X, y, epochs=epochs, name='P'+str(i+1)+'Time', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=0,
+             folds=5)
+
+
 # Read data
 for i in range(12):
-    X = np.load('./person/P'+str(i+1)+'X.npy')
-    y = np.load('./person/P'+str(i+1)+'y.npy')
+    print("######################### P"+str(i+1)+' #########################')
+    X = np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'X.npy')
+    y = np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'y.npy')
     X = reshape_1D_conv(X)
-    CV.CNN1D(X, y, epochs=50, name='LSTM', optimizer='adam',
+    CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'Time', optimizer='adam',
              batch_size=32, loss='categorical_crossentropy',
-             metrics=['accuracy'], test_size=0.3, verbose=1)
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     # LSTM
-    X = np.abs(np.load('./person/P'+str(i+1)+'X.npy'))
-    CNN.LSTMNN(X, y, epochs=50, name='LSTM', optimizer='adam',
-               batch_size=32, loss='categorical_crossentropy',
-               metrics=['accuracy'], test_size=0.3, verbose=1)
+    print("LSTM: ")
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100.npy'))
+    CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-stft', optimizer='adam',
+              batch_size=32, loss='categorical_crossentropy',
+              metrics=['accuracy'], test_size=0.1, verbose=verbose,
+              folds=5)
+
+    # LSTM
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100.npy'))
+    CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-mt', optimizer='adam',
+              batch_size=32, loss='categorical_crossentropy',
+              metrics=['accuracy'], test_size=0.1, verbose=verbose,
+              folds=5)
 
     # Short Time Fourier 1D
     print("Short Time Fourier 1D")
-    X = np.abs(np.load('./person/P'+str(i+1)+'X.npy'))
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100.npy'))
     X = reshape_1D_conv(X)
-    model = CNN.CNN1D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'stft-1D', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     # Short Time Fourier 1D with log
     print("Short Time Fourier 1D with log")
-    X = np.abs(np.load('stft-1D-50.npy'))
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100.npy'))
     X = np.log10(X.clip(min=000000.1))
     X = reshape_1D_conv(X)
-    model = CNN.CNN1D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'stft-1D-log', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     # Short Time Fourier 2D
     print("Short Time Fourier 2D")
-    X = np.abs(np.load('stft-2D-50.npy'))
-    model = CNN.CNN2D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-2D-100.npy'))
+    CV.CNN2D(X, y, epochs=epochs, name='P'+str(i+1)+'stft-2D', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     # STFT 2D with Log Transformation
-    X = np.abs(np.load('stft-2D-50.npy'))
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-2D-100.npy'))
     X = np.log10(X.clip(min=000000.1))
-    model = CNN.CNN2D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    CV.CNN2D(X, y, epochs=epochs, name='P'+str(i+1)+'stft-2D-log', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     print("Multitaper 1D")
-    X = np.abs(np.load('mt-1D-50.npy'))
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100.npy'))
     X = reshape_1D_conv(X)
-    model = CNN.CNN1D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'MT-1D', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     # MultiTaper 1D with log
-    X = np.abs(np.load('mt-1D-50.npy'))
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100.npy'))
     X = np.log10(X.clip(min=000000.1))
     X = reshape_1D_conv(X)
-    model = CNN.CNN1D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'MT-1D-log', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     # Multitaper 2D
-    X = np.abs(np.load('mt-2D-50.npy'))
-    model = CNN.CNN2D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'mt-2D-100.npy'))
+    CV.CNN2D(X, y, epochs=epochs, name='P'+str(i+1)+'MT-2D', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 
     # Multitaper 2D with Log
-    X = np.abs(np.load('stft-2D-50.npy'))
+    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'mt-2D-100.npy'))
     X = np.log10(X.clip(min=000000.1))
-    model = CNN.CNN2D(X, y, epochs=50, name='LSTM', optimizer='adam',
-                      batch_size=32, loss='categorical_crossentropy',
-                      metrics=['accuracy'], test_size=0.3, verbose=1)
+    CV.CNN2D(X, y, epochs=epochs, name='P'+str(i+1)+'MT-2D-log', optimizer='adam',
+             batch_size=32, loss='categorical_crossentropy',
+             metrics=['accuracy'], test_size=0.1, verbose=verbose,
+             folds=5)
 # ################ TRAIN MODELS #########################
 # ConvLSTM2D
 # X = np.load('EEG_2D_LSTM.npy')
 # X = X.reshape(X.shape[0], X.shape[1], X.shape[2], X.shape[3], 1)
 # CNN.ConvLSTM(X, y, epochs=epochs, name='ConvLSTM', num_GPU=num_GPU,
 #            optimizer='adam', batch_size=64, loss='categorical_crossentropy',
-#            metrics=['accuracy'], test_split_size=0.1, verbose=1)
+#            metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
 
 # LSTM
@@ -130,4 +163,4 @@ for i in range(12):
 # print(X.shape)
 # CNN.LSTMNN(X, y, epochs=10, name='LSTM', num_GPU=num_GPU,
 #            optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-#            metrics=['accuracy'], test_split_size=0.3, verbose=1)
+#            metrics=['accuracy'], test_split_size=0.3, verbose=verbose)
