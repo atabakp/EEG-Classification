@@ -57,8 +57,7 @@ def CNN1D(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
     print('{0:1d}: {1:.2f}%'.format(unique[0], counts[0]/np.sum(counts)*100))
     print('{0:1d}: {1:.2f}%'.format(unique[1], counts[1]/np.sum(counts)*100))
     print('{0:1d}: {1:.2f}%'.format(unique[2], counts[2]/np.sum(counts)*100))
-    X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                        test_size=test_size)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
     kfold = StratifiedKFold(n_splits=folds, shuffle=True)
     cvscores = []
     i = 1
@@ -98,7 +97,7 @@ def CNN1D(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
     y_true = np.argmax(y_test, axis=1)
     cm = confusion_matrix(y_true, y_pred)
     print(cm)
-    print("ACC on test set: %.2f", np.trace(cm)/np.sum(cm)*100)
+    print("ACC on test set: %.2f%%" % (np.trace(cm)/np.sum(cm)*100))
     print(name + "CV average: %.2f%% (+/- %.2f%%)" % (np.mean(cvscores),
                                                       np.std(cvscores)))
 
@@ -239,8 +238,8 @@ def Dense_NN(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
 
     tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
 
-    all_callbacks = [tensorboard, checkpoint, reduceLR, EarlyStop]
-    # all_callbacks = [tensorboard]
+    all_callbacks = [tensorboard, reduceLR, EarlyStop]
+    # all_callbacks = [tensorboard, checkpoint]
     y = np.argmax(y, axis=1)
     unique, counts = np.unique(y, return_counts=True)
     print("Data balance:")     
@@ -255,26 +254,27 @@ def Dense_NN(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
     for train, val in kfold.split(X_train, y_train):
         # Building model
         model = Sequential()
+        
         model.add(Dense(
             input_dim=X.shape[1],
+            units=2000,
+            activation="relu"))
+        model.add(BatchNormalization())
+        model.add(Dense(
             units=1000,
             activation="relu"))
 
-        model.add(Dense(
-            units=500,
-            activation="relu"))
+        # model.add(Dense(
+        #     units=200,
+        #     activation="relu"))
 
-        model.add(Dense(
-            units=200,
-            activation="relu"))
+        # model.add(Dense(
+        #     units=512,
+        #     activation="relu"))
 
-        model.add(Dense(
-            units=512,
-            activation="relu"))
-
-        model.add(Dense(
-            units=100,
-            activation="relu"))
+        # model.add(Dense(
+        #     units=100,
+        #     activation="relu"))
 
         model.add(Dense(units=3,
                         activation="softmax"))
@@ -440,6 +440,7 @@ def LSTMNN(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
     tensorboard = callbacks.TensorBoard(log_dir=TBlog_path)
 
     all_callbacks = [tensorboard, checkpoint, reduceLR, EarlyStop]
+    all_callbacks = [tensorboard, reduceLR, EarlyStop]
     # all_callbacks = [tensorboard]
     y = np.argmax(y, axis=1)
     unique, counts = np.unique(y, return_counts=True)
@@ -467,9 +468,11 @@ def LSTMNN(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
         #                  kernel_initializer='uniform',
         #                  name='1-Conv1D'))
         # model.add(LSTM(64,  return_sequences=False))
-        model.add(LSTM(128,  return_sequences=False,
+        
+        model.add(LSTM(64,  return_sequences=False,
                   input_shape=(X.shape[1], X.shape[2])))
-        #model.add(Dropout(0.3))
+       
+        model.add(Dropout(0.3))
         # model.add(LSTM(32))
         model.add(Dense(3, activation='softmax'))
         y_tr = to_categorical(y_train[train])
@@ -482,7 +485,7 @@ def LSTMNN(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
                            callbacks=all_callbacks, shuffle=shuffle)
         y_val = to_categorical(y_train[val])
         scores = parallel_model.evaluate(X_train[val], y_val, verbose=verbose)
-        print("fold %d: %s: %.2f%%" % (i, parallel_model.metrics_names[1],
+        print("fold %d: %s: %.2f%%" %(i, parallel_model.metrics_names[1],
                                        scores[1]*100))
         i = i+1
         cvscores.append(scores[1] * 100)
@@ -492,7 +495,7 @@ def LSTMNN(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
     y_true = np.argmax(y_test, axis=1)
     cm = confusion_matrix(y_true, y_pred)
     print(cm)
-    print("ACC on test set: %.2f%%" % np.trace(cm)/np.sum(cm)*100)
+    print("ACC on test set: %.2f%%" % (np.trace(cm)/np.sum(cm)*100))
     print(name + "CV average: %.2f%% (+/- %.2f%%)" % (np.mean(cvscores),
                                                       np.std(cvscores)))
 
@@ -616,38 +619,64 @@ def newCNN(X, y, epochs, name, folds=10, test_size=0.1, verbose=1,
     cvscores = []
     i = 1
     for train, val in kfold.split(X_train, y_train):
-
         inp = Input(shape=(X.shape[1], X.shape[2], 1))
-        b1_conv1 = Conv2D(filters=25, kernel_size=(10, 1), strides=1,
-                          kernel_initializer='uniform', data_format="channels_last")(inp)
-        b1_conv2 = Conv2D(filters=25, kernel_size=(1, 32), strides=1,
-                          kernel_initializer='uniform', activation='elu', data_format="channels_last")(b1_conv1)
-        b1_permute = Permute((1, 3, 2))(b1_conv2)
-        b1_maxpool = MaxPooling2D((3, 1),data_format="channels_last")(b1_permute)
+        B1_conv1 = Conv2D(filters=25, kernel_size=(10, 1), strides=1,
+                         kernel_initializer='uniform',
+                         data_format="channels_last",
+                         input_shape=(X.shape[1], X.shape[2], 1))(inp)
+        B1_conv2 = Conv2D(filters=25, kernel_size=(1, 32), strides=1,
+                         kernel_initializer='uniform',
+                         data_format="channels_last")(B1_conv1)
+        B1_norm = BatchNormalization()(B1_conv2)
+        B1_activation = Activation('elu')(B1_norm)
+        B1_permute = Permute((1, 3, 2))(B1_activation)
+        B1_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(B1_permute)
 
-        b2_conv = Conv2D(filters=50, kernel_size=(10, 25), strides=1,
-                         kernel_initializer='uniform', activation='elu', data_format="channels_last")(b1_maxpool)
-        b2_permute = Permute((1, 3, 2))(b2_conv)
-        b2_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(b2_permute)
+        B2_conv = Conv2D(filters=50, kernel_size=(10, 25), strides=1,
+                         kernel_initializer='uniform',
+                         data_format="channels_last")(B1_maxpool)
+        # model.add(Dropout(0.3))
+        B2_norm = BatchNormalization()(B2_conv)
+        B2_activation = Activation('elu')(B2_norm)
+        B2_permute = Permute((1, 3, 2))(B2_activation)
+        B2_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(B2_permute)
 
-        b3_conv = Conv2D(filters=100, kernel_size=(10, 50), strides=1,
-                         kernel_initializer='uniform', activation='elu', data_format="channels_last")(b2_maxpool)
-        b3_permute = Permute((1, 3, 2))(b3_conv)
-        b3_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(b3_permute)
+        B3_conv1 = Conv2D(filters=100, kernel_size=(10, 50), strides=1,
+                         kernel_initializer='uniform',
+                         data_format="channels_last")(B2_maxpool)
+        B3_norm = BatchNormalization()(B3_conv1)
+        B3_activation = Activation('elu')(B3_norm)
+        B3_permute = Permute((1, 3, 2))(B3_activation)
+        B3_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(B3_permute)
 
-        b4_conv = Conv2D(filters=200, kernel_size=(10, 100), strides=1,
-                         kernel_initializer='uniform', activation='elu', data_format="channels_last")(b3_maxpool)
-        b4_permute = Permute((1, 3, 2))(b4_conv)
-        b4_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(b4_permute)
+        B4_conv1 = Conv2D(filters=200, kernel_size=(10, 100), strides=1,
+                         kernel_initializer='uniform',
+                         data_format="channels_last")(B3_maxpool)
+        B4_norm = BatchNormalization()(B4_conv1)
+        B4_activation = Activation('elu')(B4_norm)
+        B4_permute = Permute((1, 3, 2))(B4_activation)
+        B4_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(B4_permute)
 
-        b5_conv = Conv2D(filters=400, kernel_size=(10, 200), strides=1,
-                         kernel_initializer='uniform', activation='elu', data_format="channels_last")(b4_maxpool)
-        b5_permute = Permute((1, 3, 2))(b5_conv)
-        b5_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(b5_permute)
+        B5_conv1 = Conv2D(filters=400, kernel_size=(10, 200), strides=1,
+                         kernel_initializer='uniform', activation='elu',
+                         data_format="channels_last")(B4_maxpool)
+        B5_permute = Permute((1, 3, 2))(B5_conv1)
+        B5_maxpool = MaxPooling2D((3, 1), data_format="channels_last")(B5_permute)
 
-        flatten = Flatten()(b5_maxpool)
-        outp = Dense(3, activation='softmax')(flatten)
+        B6_flatten = Flatten()(B5_maxpool)
+        # inp_flatten = Flatten()(inp)
+        # inp_norm = BatchNormalization()(inp_flatten)
+        # add = keras.layers.Concatenate()([inp_norm, B6_flatten])
+        B6_dense1 = Dense(512, activation='elu')(B6_flatten)
+        # model.add(Dropout(0.3))
+        B6_dense2 = Dense(200, activation='elu')(B6_dense1)
+        # model.add(Dropout(0.3))
+        B6_dense3 = Dense(100, activation='elu')(B6_dense2)
+        outp = Dense(3, activation='softmax')(B6_dense3)
+        # model.summary()
         model = Model(inputs=inp, outputs=outp)
+        from keras.utils import plot_model
+        plot_model(model, to_file='model.png')
         y_tr = to_categorical(y_train[train])
 
         parallel_model = multi_gpu_model(model, gpus=4)

@@ -43,18 +43,62 @@ def reshape_1D_conv(X):
 def reshape_2D_conv(X):
     X_reshaped = X.reshape(X.shape[0], X.shape[1], X.shape[2], 1)
     return X_reshaped
-
-
-i = 0
+i=0
+# X = np.load('EEG.npy')
+# y = np.load('y.npy')
+# X = np.array([X[i, :, :].flatten() for i in range(X.shape[0])])  # concatenate
+# print('################### Dense (2layers) #################')
+# CV.Dense_NN(X, y, epochs=15, name='P'+str(i+1)+'Time', optimizer='adam',
+#               batch_size=32, loss='categorical_crossentropy',
+#               metrics=['accuracy'], test_size=0.1, verbose=0,
+#               folds=3)
+# exit()
 X = np.load('EEG.npy')
-print(X.shape)
 y = np.load('y.npy')
 X = reshape_2D_conv(X)
-print(X.shape)
-CV.newCNN(X, y, epochs=epochs, name='P'+str(i+1)+'Time', optimizer='adam',
-             batch_size=32, loss='categorical_crossentropy',
-             metrics=['accuracy'], test_size=0.1, verbose=0,
-             folds=5)
+# print('################### ConvNet #################')
+# CV.newCNN(X, y, epochs=50, name='P'+str(i+1)+'Time', optimizer='adam',
+#               batch_size=32, loss='categorical_crossentropy',
+#               metrics=['accuracy'], test_size=0.1, verbose=0,
+#               folds=5)
+# exit()
+
+# for i in range(12):
+#     print("############### "+str(i+1)+" ###################")
+#     X = np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'X.npy')
+#     y = np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'y.npy')
+#     X = np.load('EEG.npy')
+#     y = np.load('y.npy')
+#     X = reshape_2D_conv(X)
+#     print(X.shape)
+#     CV.newCNN(X, y, epochs=50, name='P'+str(i+1)+'Time', optimizer='adam',
+#               batch_size=32, loss='categorical_crossentropy',
+#               metrics=['accuracy'], test_size=0.1, verbose=1,
+#               folds=2)
+
+# print("LSTM Time: ")
+# X = np.load('EEG.npy')
+# CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-time', optimizer='adam',
+#           batch_size=32, loss='categorical_crossentropy',
+#           metrics=['accuracy'], test_size=0.2, verbose=verbose,
+#           folds=3)
+
+
+# # LSTM
+# print("LSTM stft: ")
+# X = np.abs(np.load('stft-1D-100.npy'))
+# CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-stft', optimizer='adam',
+#             batch_size=32, loss='categorical_crossentropy',
+#             metrics=['accuracy'], test_size=0.2, verbose=verbose,
+#             folds=3)
+
+# # LSTM
+# print("LSTM MT: ")
+# X = np.abs(np.load('mt-1D-100.npy'))
+# CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-mt', optimizer='adam',
+#             batch_size=32, loss='categorical_crossentropy',
+#             metrics=['accuracy'], test_size=0.2, verbose=verbose,
+#             folds=3)
 
 
 # Read data
@@ -62,31 +106,45 @@ for i in range(12):
     print("######################### P"+str(i+1)+' #########################')
     X = np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'X.npy')
     y = np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'y.npy')
-    X = reshape_1D_conv(X)
-    CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'Time', optimizer='adam',
-             batch_size=32, loss='categorical_crossentropy',
-             metrics=['accuracy'], test_size=0.1, verbose=verbose,
-             folds=5)
+    # X = reshape_1D_conv(X)
+    # CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'Time', optimizer='adam',
+    #          batch_size=32, loss='categorical_crossentropy',
+    #          metrics=['accuracy'], test_size=0.1, verbose=verbose,
+    #          folds=5)
+
 
     # LSTM
-    print("LSTM: ")
-    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100.npy'))
-    CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-stft', optimizer='adam',
-              batch_size=32, loss='categorical_crossentropy',
-              metrics=['accuracy'], test_size=0.1, verbose=verbose,
-              folds=5)
+    # print("LSTM: ")
+    # X = np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'X.npy')
+    # CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-stft', optimizer='adam',
+    #           batch_size=32, loss='categorical_crossentropy',
+    #           metrics=['accuracy'], test_size=0.1, verbose=verbose,
+    #           folds=3)
+
 
     # LSTM
-    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100.npy'))
-    CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-mt', optimizer='adam',
-              batch_size=32, loss='categorical_crossentropy',
-              metrics=['accuracy'], test_size=0.1, verbose=verbose,
-              folds=5)
+    # print("LSTM stft: ")
+    # X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100.npy'))
+    # CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-stft', optimizer='adam',
+    #           batch_size=32, loss='categorical_crossentropy',
+    #           metrics=['accuracy'], test_size=0.1, verbose=verbose,
+    #           folds=3)
 
+    # # LSTM
+    # print("LSTM MT: ")
+    # X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'mt-1D-100.npy'))
+    # CV.LSTMNN(X, y, epochs=epochs, name='P'+str(i+1)+'LSTM-mt', optimizer='adam',
+    #           batch_size=32, loss='categorical_crossentropy',
+    #           metrics=['accuracy'], test_size=0.1, verbose=verbose,
+    #           folds=3)
+    # exit()
     # Short Time Fourier 1D
     print("Short Time Fourier 1D")
-    X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100.npy'))
+    #X = np.abs(np.load('./person/P'+str(i+1)+'/P'+str(i+1)+'stft-1D-100.npy'))
+    y = np.load('y.npy')
+    X = np.abs(np.load('stft-1D-100.npy'))
     X = reshape_1D_conv(X)
+    print(X.shape)
     CV.CNN1D(X, y, epochs=epochs, name='P'+str(i+1)+'stft-1D', optimizer='adam',
              batch_size=32, loss='categorical_crossentropy',
              metrics=['accuracy'], test_size=0.1, verbose=verbose,

@@ -4,6 +4,7 @@
 import numpy as np
 import pandas as pd
 import CV
+import CNN
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import (Dense, Dropout, Conv1D, GlobalAveragePooling1D,
@@ -22,6 +23,9 @@ from sklearn.model_selection import StratifiedKFold
 from keras.utils import multi_gpu_model
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 k = 3
 epochs = 80
@@ -54,15 +58,21 @@ y = np.load('y.npy')
 #            optimizer='adam', batch_size=64, loss='categorical_crossentropy',
 #            metrics=['accuracy'], test_split_size=0.1, verbose=1)
 
+print("LSTM")
+LSTM
+X = np.abs(np.load('stft-1D-100.npy'))
+X = np.transpose(X,(0,2,1))
+print(X.shape)
+# CV.LSTMNN(X, y, epochs=20, name='lstm-stft', folds=3, test_size=0.1, verbose=1,
+#            batch_size=32, optimizer='adam', loss='categorical_crossentropy',
+#            metrics=['accuracy'], shuffle=True)
 
-# LSTM
-# X = np.load('EEG.npy')
-# X = reshape_1D_conv(X)
-# CNN.LSTMNN(X, y, epochs=5, name='LSTM', num_GPU=num_GPU,
-#            optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-#            metrics=['accuracy'], test_split_size=0.1, verbose=1)
-# Print("Done!!!!!!!!!!!!!!!!!")
+CNN.LSTMNN(X, y, epochs=20, name='LSTM-stft', test_split_size=0.2, verbose=1,
+           num_GPU=4, batch_size=32, optimizer='adam',
+           loss='categorical_crossentropy', metrics=['accuracy'],
+           shuffle=True)
 
+exit()
 
 
 X = np.load('EEG.npy')

@@ -388,10 +388,12 @@ def LSTMNN(X, y, epochs, name, test_split_size=0.1, verbose=1,
     #                  kernel_initializer='uniform',
     #                  name='1-Conv1D'))
     # model.add(LSTM(64,  return_sequences=False))
-    model.add(LSTM(128,  return_sequences=True,
+    model.add(LSTM(64,  return_sequences=False,
               input_shape=(X.shape[1], X.shape[2])))
-    # model.add(Dropout(0.3))
-    model.add(LSTM(32))
+    #model.add(Dropout(0.5))
+    #model.add(Dense(512, activation='relu'))
+    #model.add(Dense(512, activation='relu'))
+    #model.add(LSTM(32))
     model.add(Dense(3, activation='softmax'))
     model.summary()
     # Training

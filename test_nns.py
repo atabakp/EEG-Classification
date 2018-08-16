@@ -65,21 +65,20 @@ y = np.load('y.npy')
 
 # LSTM fft
 X = np.abs(np.load('stft-1D-100.npy'))
-print(X.shape)
-CNN.LSTMNN(X, y, epochs=50, name='LSTM', num_GPU=num_GPU,
-           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
-           metrics=['accuracy'], test_split_size=0.3, verbose=1)
-print("Done!!!!!!!!!!!!!!!!!")
-exit()
+# print(X.shape)
+# CNN.LSTMNN(X, y, epochs=1, name='LSTM', num_GPU=num_GPU,
+#            optimizer='adam', batch_size=32, loss='categorical_crossentropy',
+#            metrics=['accuracy'], test_split_size=0.3, verbose=1)
+# print("Done!!!!!!!!!!!!!!!!!")
+
 
 # channels all
 X = np.load('EEG.npy')
 ####
-X = np.load('./person/P1X.npy')
-y = np.load('./person/P1y.npy')
+
 ####
 X = reshape_1D_conv(X)
-CNN.CNN1D(X, y, epochs=epochs, name='TimeDomain-allch', num_GPU=num_GPU,
+CNN.CNN1D(X, y, epochs=50, name='TimeDomain-allch', num_GPU=num_GPU,
           optimizer='adam', batch_size=32, loss='categorical_crossentropy',
           metrics=['accuracy'], test_split_size=0.1, verbose=verbose)
 
